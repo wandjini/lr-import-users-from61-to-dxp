@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.liferay.suez.user.synch.model.ExtUser" />
+	<class name="com.liferay.suez.user.synch.model.impl.ExtUserImpl" table="user_">
+		<id name="userId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="defaultUser" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="contactId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property column="password_" name="password" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="passwordEncrypted" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="passwordReset" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="passwordModifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="digest" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="reminderQueryQuestion" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="reminderQueryAnswer" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="graceLoginCount" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="screenName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="emailAddress" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="facebookId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="openId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="portraitId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="languageId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="timeZoneId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="greeting" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="firstName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="middleName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="lastName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="jobTitle" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="loginDate" type="org.hibernate.type.TimestampType" />
+		<property name="loginIP" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="lastLoginDate" type="org.hibernate.type.TimestampType" />
+		<property name="lastLoginIP" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="lastFailedLoginDate" type="org.hibernate.type.TimestampType" />
+		<property name="failedLoginAttempts" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="lockout" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="lockoutDate" type="org.hibernate.type.TimestampType" />
+		<property name="agreedToTermsOfUse" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="emailAddressVerified" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+	</class>
+</hibernate-mapping>

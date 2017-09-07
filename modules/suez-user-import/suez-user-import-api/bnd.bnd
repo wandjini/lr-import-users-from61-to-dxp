@@ -1,0 +1,7 @@
+Bundle-SymbolicName: suez.user.import-api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.suez.user.synch.exception,\
+	com.liferay.suez.user.synch.model,\
+	com.liferay.suez.user.synch.service,\
+	com.liferay.suez.user.synch.service.persistence
