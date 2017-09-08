@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.persistence.UserUtil;
+import com.liferay.suez.synch.users.adapter.ExtUserToUserAdapter;
 import com.liferay.suez.synch.users.configuration.SynchSuezUsersConfiguration;
 import com.liferay.suez.user.management.service.UserManagementLocalService;
 import com.liferay.suez.user.synch.model.ExtUser;
@@ -81,11 +82,13 @@ public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageList
 			//while(start )
 			if(extUsers != null && !extUsers.isEmpty()){
 				_log.info("Found ["+extUsers.size()+"] users");
-				
+				ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
 				for(ExtUser extUser : extUsers){
 					user =_userLocalService.fetchUserByEmailAddress(companyId, extUser.getEmailAddress());
 					if(user == null){
-						addUser(companyId, creatorUserId, extUser);		
+						//addUser(companyId, creatorUserId, extUser);
+						userAdapter.setExtUser(extUser);
+						_userLocalService.addUser(userAdapter.adaptExternalUsertoUser());
 					}
 					
 				}
