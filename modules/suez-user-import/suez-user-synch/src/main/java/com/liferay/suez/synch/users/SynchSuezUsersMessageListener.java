@@ -1,9 +1,7 @@
 package com.liferay.suez.synch.users;
 
 
-import java.text.ParseException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Activate;
@@ -13,7 +11,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.BaseSchedulerEntryMessageListener;
@@ -26,7 +23,6 @@ import com.liferay.portal.kernel.scheduler.TimeUnit;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.service.persistence.UserUtil;
 import com.liferay.suez.synch.users.adapter.ExtUserToUserAdapter;
 import com.liferay.suez.synch.users.configuration.SynchSuezUsersConfiguration;
 import com.liferay.suez.user.management.service.UserManagementLocalService;
@@ -88,7 +84,7 @@ public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageList
 					if(user == null){
 						//addUser(companyId, creatorUserId, extUser);
 						userAdapter.setExtUser(extUser);
-						_userLocalService.addUser(userAdapter.adaptExternalUsertoUser());
+						_userLocalService.addUser(userAdapter.adaptExternalUsertoUser(companyId, creatorUserId));
 					}
 					
 				}
@@ -101,6 +97,7 @@ public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageList
 		}
 	}
 
+	/*
 	private void addUser(long companyId, long creatorUserId, ExtUser extUser) throws PortalException, ParseException{
 		_userManagementLocalService.addExtUser(companyId, 
 				extUser.getCreateDate(), creatorUserId, extUser.getModifiedDate(), 
@@ -140,6 +137,8 @@ public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageList
 				extUser.getStatus(), null);
 
 	}
+	
+	*/
 	@Modified
 	protected void modified(Map<String, Object> properties) {
 		deactivate();
