@@ -47,7 +47,7 @@ public class ExtUserToUserAdapter {
 		User user = _userLocalService.createUser(_counterLocalService.increment(User.class.getName()));
 		user.setAgreedToTermsOfUse(this.extUser.getAgreedToTermsOfUse());
 		user.setPasswordEncrypted(true);
-		user.setPassword(extUser.getPassword());
+		user.setPassword(this.extUser.getPassword());
 		/*...
 		 * here would go the rest of the fields.
 		 * a more generic approach would be to use reflection
