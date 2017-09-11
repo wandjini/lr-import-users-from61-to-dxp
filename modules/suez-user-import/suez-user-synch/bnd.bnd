@@ -1,2 +1,3 @@
 Bundle-SymbolicName: suez.user.synch
 Bundle-Version: 1.0.0
+Export-Package: com.liferay.suez.synch.users.util

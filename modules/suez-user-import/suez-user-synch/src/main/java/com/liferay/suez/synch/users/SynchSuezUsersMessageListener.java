@@ -13,31 +13,36 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.messaging.BaseSchedulerEntryMessageListener;
-import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.scheduler.SchedulerEngineHelper;
-import com.liferay.portal.kernel.scheduler.TimeUnit;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
-import com.liferay.portal.kernel.scheduler.TriggerFactoryUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.suez.synch.users.adapter.ExtUserToUserAdapter;
 import com.liferay.suez.synch.users.configuration.SynchSuezUsersConfiguration;
+import com.liferay.suez.synch.users.util.SynchSuezUsersKeys;
 import com.liferay.suez.user.management.service.UserManagementLocalService;
 import com.liferay.suez.user.synch.model.ExtUser;
 import com.liferay.suez.user.synch.service.ExtUserLocalService;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
+/**
+ * 
+ * @author guy
+ *
+ */
 @Component(
 	immediate = true,
+	property = {"destination.name=" + SynchSuezUsersKeys.DESTINATION_NAME},
 	configurationPid = "com.liferay.suez.synch.users.configuration.SynchSuezUsersConfiguration",
 	configurationPolicy = ConfigurationPolicy.OPTIONAL,
-	service = SynchSuezUsersMessageListener.class
+	service = MessageListener.class
 )
-public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageListener {
+public class SynchSuezUsersMessageListener extends BaseMessageListener {
 
 	@Activate
 	@Modified
@@ -48,16 +53,16 @@ public class SynchSuezUsersMessageListener extends BaseSchedulerEntryMessageList
 			Configurable.createConfigurable(
 					SynchSuezUsersConfiguration.class, properties);
 
-		schedulerEntryImpl.setTrigger(TriggerFactoryUtil.createTrigger(getEventListenerClass(), getEventListenerClass(),
+	/*		schedulerEntryImpl.setTrigger(TriggerFactoryUtil.createTrigger(getEventListenerClass(), getEventListenerClass(),
 				_configuration.synchSuezUsersInterval(), TimeUnit.MINUTE));
 
 			_schedulerEngineHelper.register(
 				this, schedulerEntryImpl, DestinationNames.SCHEDULER_DISPATCH);
-			
+	*/		
 	}
 	@Deactivate
 	protected void deactivate() {
-		_schedulerEngineHelper.unregister(this);
+		//_schedulerEngineHelper.unregister(this);
 	}
 
 	@Override

@@ -81,6 +81,7 @@ public class ExtUserToUserAdapter {
 		user.setLastFailedLoginDate(this.extUser.getLastFailedLoginDate());
 		user.setLastLoginDate(this.extUser.getLastLoginDate());
 		user.setLastLoginIP(this.extUser.getLastLoginIP());
+		user.setLastFailedLoginDate(this.extUser.getLastFailedLoginDate());
 		user.setEmailAddressVerified(this.extUser.getEmailAddressVerified());
 		
 		Company company = _companyLocalService.fetchCompany(companyId);
