@@ -1,6 +1,8 @@
 package com.liferay.suez.synch.users.adapter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -9,9 +11,12 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.ContactConstants;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexer;
@@ -22,13 +27,16 @@ import com.liferay.portal.kernel.service.ContactLocalService;
 import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.suez.user.synch.model.ExtUser;
+import com.liferay.users.admin.kernel.util.UsersAdminUtil;
 
 /**
  * Class that adapts an ExtUser to Liferay's User.
@@ -67,9 +75,11 @@ public class ExtUserToUserAdapter {
 	 * @throws PortalException 
 	 * @throws ParseException 
 	 */
-	public final User adaptExternalUsertoUser(long companyId, long creatorUserId) 
+	public final User adaptExternalUsertoUser(long[] groupIds, long[] roleIds, ServiceContext serviceContext) 
 			throws PortalException, ParseException {
 		
+		long companyId = serviceContext.getCompanyId();
+		long creatorUserId = serviceContext.getUserId();
 		User user = _userLocalService.createUser(_counterLocalService.increment());
 		user.setAgreedToTermsOfUse(this.extUser.getAgreedToTermsOfUse());
 		user.setPasswordEncrypted(this.extUser.getPasswordEncrypted());
@@ -158,7 +168,7 @@ public class ExtUserToUserAdapter {
 		//contact.setPrefixId(prefixId);
 		//contact.setSuffixId(suffixId);
 		//contact.setMale(male);
-		contact.setBirthday(DateUtil.parseDate("ddMMyyyy", "0101970", new Locale("en_US")));
+		contact.setBirthday(DateUtil.parseDate("ddMMyyyy", "0101970", serviceContext.getLocale()));
 		contact.setJobTitle(this.extUser.getJobTitle());
 
 		_contactLocalService.updateContact(contact);
@@ -173,12 +183,12 @@ public class ExtUserToUserAdapter {
 			StringPool.SLASH + this.extUser.getScreenName(), false, true, null);
 
 		// Groups
-		/*
+		
 		if (!ArrayUtil.isEmpty(groupIds)) {
 			List<Group> groups = new ArrayList<>();
 
 			for (long groupId : groupIds) {
-				Group group = groupLocalService.fetchGroup(groupId);
+				Group group = _groupLocalService.fetchGroup(groupId);
 
 				if (group != null) {
 					groups.add(group);
@@ -190,8 +200,8 @@ public class ExtUserToUserAdapter {
 				}
 			}
 
-			groupLocalService.addUserGroups(userId, groups);
-		}*/
+			_groupLocalService.addUserGroups(user.getUserId(), groups);
+		}
 
 		_userLocalService.addDefaultGroups(user.getUserId());
 
@@ -200,13 +210,14 @@ public class ExtUserToUserAdapter {
 		//updateOrganizations(userId, organizationIds, false);
 
 		// Roles
-		/*
+		
 		if (roleIds != null) {
 			roleIds = UsersAdminUtil.addRequiredRoles(user, roleIds);
 
-			userPersistence.setRoles(userId, roleIds);
+			_roleLocalService.setUserRoles(user.getUserId(), roleIds);
+			
 		}
-		*/
+		
 		_userLocalService.addDefaultRoles(user.getUserId());
 
 		// User groups
@@ -310,11 +321,24 @@ public class ExtUserToUserAdapter {
 	public void resourceLocalService(ResourceLocalService resourceLocalService){
 		_resourceLocalService = resourceLocalService;
 	}
+	
 	protected static ResourceLocalService _resourceLocalService;
 
-	protected void reindex(User user) throws SearchException {
+	@Reference(unbind = "-")
+	protected void setRoleLocalService(
+			RoleLocalService roleLocalService) {
+		_roleLocalService = roleLocalService;
+	}
+	
+	protected RoleLocalService _roleLocalService;
+	
+	public void reindex(User user) throws SearchException {
 		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);
 		indexer.reindex(user);
 	}
+	
+	private static final Log _log = LogFactoryUtil.getLog(
+			ExtUserToUserAdapter.class);
+
 }

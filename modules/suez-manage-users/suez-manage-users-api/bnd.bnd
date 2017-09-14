@@ -1,7 +1,0 @@
-Bundle-SymbolicName: suez.manage.users-api
-Bundle-Version: 1.0.0
-Export-Package:\
-	com.liferay.suez.user.management.exception,\
-	com.liferay.suez.user.management.model,\
-	com.liferay.suez.user.management.service,\
-	com.liferay.suez.user.management.service.persistence

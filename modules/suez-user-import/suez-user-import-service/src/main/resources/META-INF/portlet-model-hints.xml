@@ -1,6 +1,29 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.liferay.suez.user.synch.model.ExtCompany">
+		<field name="companyId" type="long" />
+		<field name="accountId" type="long" />
+		<field name="webId" type="String" />
+		<field name="key" type="String" />
+		<field name="mx" type="String" />
+		<field name="homeURL" type="String" />
+		<field name="logoId" type="long" />
+		<field name="system" type="boolean" />
+		<field name="maxUsers" type="int" />
+		<field name="active" type="boolean" />
+	</model>
+	<model name="com.liferay.suez.user.synch.model.ExtRole">
+		<field name="roleId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+		<field name="name" type="String" />
+		<field localized="true" name="title" type="String" />
+		<field localized="true" name="description" type="String" />
+		<field name="type" type="int" />
+		<field name="subtype" type="String" />
+	</model>
 	<model name="com.liferay.suez.user.synch.model.ExtUser">
 		<field name="userId" type="long" />
 		<field name="companyId" type="long" />
@@ -40,5 +63,6 @@
 		<field name="agreedToTermsOfUse" type="boolean" />
 		<field name="emailAddressVerified" type="boolean" />
 		<field name="status" type="int" />
+		<field name="roleId" type="long" />
 	</model>
 </model-hints>

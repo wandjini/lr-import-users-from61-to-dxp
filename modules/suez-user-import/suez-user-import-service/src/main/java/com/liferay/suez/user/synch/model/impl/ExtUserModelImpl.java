@@ -21,6 +21,7 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
@@ -33,13 +34,16 @@ import com.liferay.portal.kernel.util.StringPool;
 
 import com.liferay.suez.user.synch.model.ExtUser;
 import com.liferay.suez.user.synch.model.ExtUserModel;
+import com.liferay.suez.user.synch.model.ExtUserSoap;
 
 import java.io.Serializable;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,6 +59,7 @@ import java.util.Map;
  * @see ExtUserModel
  * @generated
  */
+@JSON(strict = true)
 @ProviderType
 public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	implements ExtUserModel {
@@ -102,7 +107,8 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 			{ "lockoutDate", Types.TIMESTAMP },
 			{ "agreedToTermsOfUse", Types.BOOLEAN },
 			{ "emailAddressVerified", Types.BOOLEAN },
-			{ "status", Types.INTEGER }
+			{ "status", Types.INTEGER },
+			{ "roleId", Types.BIGINT }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -145,9 +151,10 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		TABLE_COLUMNS_MAP.put("agreedToTermsOfUse", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("emailAddressVerified", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("roleId", Types.BIGINT);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table user_ (userId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,defaultUser BOOLEAN,contactId LONG,password_ VARCHAR(75) null,passwordEncrypted BOOLEAN,passwordReset BOOLEAN,passwordModifiedDate DATE null,digest VARCHAR(75) null,reminderQueryQuestion VARCHAR(75) null,reminderQueryAnswer VARCHAR(75) null,graceLoginCount INTEGER,screenName VARCHAR(75) null,emailAddress VARCHAR(75) null,facebookId LONG,openId VARCHAR(75) null,portraitId LONG,languageId VARCHAR(75) null,timeZoneId VARCHAR(75) null,greeting VARCHAR(75) null,comments VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,jobTitle VARCHAR(75) null,loginDate DATE null,loginIP VARCHAR(75) null,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,lastFailedLoginDate DATE null,failedLoginAttempts INTEGER,lockout BOOLEAN,lockoutDate DATE null,agreedToTermsOfUse BOOLEAN,emailAddressVerified BOOLEAN,status INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table user_ (userId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,defaultUser BOOLEAN,contactId LONG,password_ VARCHAR(75) null,passwordEncrypted BOOLEAN,passwordReset BOOLEAN,passwordModifiedDate DATE null,digest VARCHAR(75) null,reminderQueryQuestion VARCHAR(75) null,reminderQueryAnswer VARCHAR(75) null,graceLoginCount INTEGER,screenName VARCHAR(75) null,emailAddress VARCHAR(75) null,facebookId LONG,openId VARCHAR(75) null,portraitId LONG,languageId VARCHAR(75) null,timeZoneId VARCHAR(75) null,greeting VARCHAR(75) null,comments VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,jobTitle VARCHAR(75) null,loginDate DATE null,loginIP VARCHAR(75) null,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,lastFailedLoginDate DATE null,failedLoginAttempts INTEGER,lockout BOOLEAN,lockoutDate DATE null,agreedToTermsOfUse BOOLEAN,emailAddressVerified BOOLEAN,status INTEGER,roleId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table user_";
 	public static final String ORDER_BY_JPQL = " ORDER BY extUser.userId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY user_.userId ASC";
@@ -161,6 +168,83 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 				"value.object.finder.cache.enabled.com.liferay.suez.user.synch.model.ExtUser"),
 			true);
 	public static final boolean COLUMN_BITMASK_ENABLED = false;
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static ExtUser toModel(ExtUserSoap soapModel) {
+		if (soapModel == null) {
+			return null;
+		}
+
+		ExtUser model = new ExtUserImpl();
+
+		model.setUserId(soapModel.getUserId());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setDefaultUser(soapModel.getDefaultUser());
+		model.setContactId(soapModel.getContactId());
+		model.setPassword(soapModel.getPassword());
+		model.setPasswordEncrypted(soapModel.getPasswordEncrypted());
+		model.setPasswordReset(soapModel.getPasswordReset());
+		model.setPasswordModifiedDate(soapModel.getPasswordModifiedDate());
+		model.setDigest(soapModel.getDigest());
+		model.setReminderQueryQuestion(soapModel.getReminderQueryQuestion());
+		model.setReminderQueryAnswer(soapModel.getReminderQueryAnswer());
+		model.setGraceLoginCount(soapModel.getGraceLoginCount());
+		model.setScreenName(soapModel.getScreenName());
+		model.setEmailAddress(soapModel.getEmailAddress());
+		model.setFacebookId(soapModel.getFacebookId());
+		model.setOpenId(soapModel.getOpenId());
+		model.setPortraitId(soapModel.getPortraitId());
+		model.setLanguageId(soapModel.getLanguageId());
+		model.setTimeZoneId(soapModel.getTimeZoneId());
+		model.setGreeting(soapModel.getGreeting());
+		model.setComments(soapModel.getComments());
+		model.setFirstName(soapModel.getFirstName());
+		model.setMiddleName(soapModel.getMiddleName());
+		model.setLastName(soapModel.getLastName());
+		model.setJobTitle(soapModel.getJobTitle());
+		model.setLoginDate(soapModel.getLoginDate());
+		model.setLoginIP(soapModel.getLoginIP());
+		model.setLastLoginDate(soapModel.getLastLoginDate());
+		model.setLastLoginIP(soapModel.getLastLoginIP());
+		model.setLastFailedLoginDate(soapModel.getLastFailedLoginDate());
+		model.setFailedLoginAttempts(soapModel.getFailedLoginAttempts());
+		model.setLockout(soapModel.getLockout());
+		model.setLockoutDate(soapModel.getLockoutDate());
+		model.setAgreedToTermsOfUse(soapModel.getAgreedToTermsOfUse());
+		model.setEmailAddressVerified(soapModel.getEmailAddressVerified());
+		model.setStatus(soapModel.getStatus());
+		model.setRoleId(soapModel.getRoleId());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<ExtUser> toModels(ExtUserSoap[] soapModels) {
+		if (soapModels == null) {
+			return null;
+		}
+
+		List<ExtUser> models = new ArrayList<ExtUser>(soapModels.length);
+
+		for (ExtUserSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
+
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.suez.user.synch.service.util.PropsUtil.get(
 				"lock.expiration.time.com.liferay.suez.user.synch.model.ExtUser"));
 
@@ -239,6 +323,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		attributes.put("agreedToTermsOfUse", getAgreedToTermsOfUse());
 		attributes.put("emailAddressVerified", getEmailAddressVerified());
 		attributes.put("status", getStatus());
+		attributes.put("roleId", getRoleId());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -480,8 +565,15 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		if (status != null) {
 			setStatus(status);
 		}
+
+		Long roleId = (Long)attributes.get("roleId");
+
+		if (roleId != null) {
+			setRoleId(roleId);
+		}
 	}
 
+	@JSON
 	@Override
 	public long getUserId() {
 		return _userId;
@@ -508,6 +600,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	public void setUserUuid(String userUuid) {
 	}
 
+	@JSON
 	@Override
 	public long getCompanyId() {
 		return _companyId;
@@ -518,6 +611,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_companyId = companyId;
 	}
 
+	@JSON
 	@Override
 	public Date getCreateDate() {
 		return _createDate;
@@ -528,6 +622,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_createDate = createDate;
 	}
 
+	@JSON
 	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
@@ -544,11 +639,13 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_modifiedDate = modifiedDate;
 	}
 
+	@JSON
 	@Override
 	public boolean getDefaultUser() {
 		return _defaultUser;
 	}
 
+	@JSON
 	@Override
 	public boolean isDefaultUser() {
 		return _defaultUser;
@@ -559,6 +656,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_defaultUser = defaultUser;
 	}
 
+	@JSON
 	@Override
 	public long getContactId() {
 		return _contactId;
@@ -569,6 +667,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_contactId = contactId;
 	}
 
+	@JSON(include = false)
 	@Override
 	public String getPassword() {
 		if (_password == null) {
@@ -584,6 +683,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_password = password;
 	}
 
+	@JSON(include = false)
 	@Override
 	public boolean getPasswordEncrypted() {
 		return _passwordEncrypted;
@@ -599,6 +699,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_passwordEncrypted = passwordEncrypted;
 	}
 
+	@JSON(include = false)
 	@Override
 	public boolean getPasswordReset() {
 		return _passwordReset;
@@ -614,6 +715,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_passwordReset = passwordReset;
 	}
 
+	@JSON(include = false)
 	@Override
 	public Date getPasswordModifiedDate() {
 		return _passwordModifiedDate;
@@ -624,6 +726,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_passwordModifiedDate = passwordModifiedDate;
 	}
 
+	@JSON(include = false)
 	@Override
 	public String getDigest() {
 		if (_digest == null) {
@@ -639,6 +742,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_digest = digest;
 	}
 
+	@JSON
 	@Override
 	public String getReminderQueryQuestion() {
 		if (_reminderQueryQuestion == null) {
@@ -654,6 +758,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_reminderQueryQuestion = reminderQueryQuestion;
 	}
 
+	@JSON
 	@Override
 	public String getReminderQueryAnswer() {
 		if (_reminderQueryAnswer == null) {
@@ -669,6 +774,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_reminderQueryAnswer = reminderQueryAnswer;
 	}
 
+	@JSON
 	@Override
 	public int getGraceLoginCount() {
 		return _graceLoginCount;
@@ -679,6 +785,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_graceLoginCount = graceLoginCount;
 	}
 
+	@JSON
 	@Override
 	public String getScreenName() {
 		if (_screenName == null) {
@@ -694,6 +801,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_screenName = screenName;
 	}
 
+	@JSON
 	@Override
 	public String getEmailAddress() {
 		if (_emailAddress == null) {
@@ -709,6 +817,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_emailAddress = emailAddress;
 	}
 
+	@JSON
 	@Override
 	public long getFacebookId() {
 		return _facebookId;
@@ -719,6 +828,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_facebookId = facebookId;
 	}
 
+	@JSON
 	@Override
 	public String getOpenId() {
 		if (_openId == null) {
@@ -734,6 +844,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_openId = openId;
 	}
 
+	@JSON
 	@Override
 	public long getPortraitId() {
 		return _portraitId;
@@ -744,6 +855,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_portraitId = portraitId;
 	}
 
+	@JSON
 	@Override
 	public String getLanguageId() {
 		if (_languageId == null) {
@@ -759,6 +871,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_languageId = languageId;
 	}
 
+	@JSON
 	@Override
 	public String getTimeZoneId() {
 		if (_timeZoneId == null) {
@@ -774,6 +887,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_timeZoneId = timeZoneId;
 	}
 
+	@JSON
 	@Override
 	public String getGreeting() {
 		if (_greeting == null) {
@@ -789,6 +903,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_greeting = greeting;
 	}
 
+	@JSON
 	@Override
 	public String getComments() {
 		if (_comments == null) {
@@ -804,6 +919,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_comments = comments;
 	}
 
+	@JSON
 	@Override
 	public String getFirstName() {
 		if (_firstName == null) {
@@ -819,6 +935,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_firstName = firstName;
 	}
 
+	@JSON
 	@Override
 	public String getMiddleName() {
 		if (_middleName == null) {
@@ -834,6 +951,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_middleName = middleName;
 	}
 
+	@JSON
 	@Override
 	public String getLastName() {
 		if (_lastName == null) {
@@ -849,6 +967,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lastName = lastName;
 	}
 
+	@JSON
 	@Override
 	public String getJobTitle() {
 		if (_jobTitle == null) {
@@ -864,6 +983,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_jobTitle = jobTitle;
 	}
 
+	@JSON
 	@Override
 	public Date getLoginDate() {
 		return _loginDate;
@@ -874,6 +994,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_loginDate = loginDate;
 	}
 
+	@JSON
 	@Override
 	public String getLoginIP() {
 		if (_loginIP == null) {
@@ -889,6 +1010,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_loginIP = loginIP;
 	}
 
+	@JSON
 	@Override
 	public Date getLastLoginDate() {
 		return _lastLoginDate;
@@ -899,6 +1021,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lastLoginDate = lastLoginDate;
 	}
 
+	@JSON
 	@Override
 	public String getLastLoginIP() {
 		if (_lastLoginIP == null) {
@@ -914,6 +1037,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lastLoginIP = lastLoginIP;
 	}
 
+	@JSON
 	@Override
 	public Date getLastFailedLoginDate() {
 		return _lastFailedLoginDate;
@@ -924,6 +1048,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lastFailedLoginDate = lastFailedLoginDate;
 	}
 
+	@JSON
 	@Override
 	public int getFailedLoginAttempts() {
 		return _failedLoginAttempts;
@@ -934,11 +1059,13 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_failedLoginAttempts = failedLoginAttempts;
 	}
 
+	@JSON
 	@Override
 	public boolean getLockout() {
 		return _lockout;
 	}
 
+	@JSON
 	@Override
 	public boolean isLockout() {
 		return _lockout;
@@ -949,6 +1076,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lockout = lockout;
 	}
 
+	@JSON
 	@Override
 	public Date getLockoutDate() {
 		return _lockoutDate;
@@ -959,11 +1087,13 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_lockoutDate = lockoutDate;
 	}
 
+	@JSON
 	@Override
 	public boolean getAgreedToTermsOfUse() {
 		return _agreedToTermsOfUse;
 	}
 
+	@JSON
 	@Override
 	public boolean isAgreedToTermsOfUse() {
 		return _agreedToTermsOfUse;
@@ -974,11 +1104,13 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_agreedToTermsOfUse = agreedToTermsOfUse;
 	}
 
+	@JSON
 	@Override
 	public boolean getEmailAddressVerified() {
 		return _emailAddressVerified;
 	}
 
+	@JSON
 	@Override
 	public boolean isEmailAddressVerified() {
 		return _emailAddressVerified;
@@ -989,6 +1121,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		_emailAddressVerified = emailAddressVerified;
 	}
 
+	@JSON
 	@Override
 	public int getStatus() {
 		return _status;
@@ -997,6 +1130,17 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	@Override
 	public void setStatus(int status) {
 		_status = status;
+	}
+
+	@JSON
+	@Override
+	public long getRoleId() {
+		return _roleId;
+	}
+
+	@Override
+	public void setRoleId(long roleId) {
+		_roleId = roleId;
 	}
 
 	@Override
@@ -1064,6 +1208,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		extUserImpl.setAgreedToTermsOfUse(getAgreedToTermsOfUse());
 		extUserImpl.setEmailAddressVerified(getEmailAddressVerified());
 		extUserImpl.setStatus(getStatus());
+		extUserImpl.setRoleId(getRoleId());
 
 		extUserImpl.resetOriginalValues();
 
@@ -1362,12 +1507,14 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 
 		extUserCacheModel.status = getStatus();
 
+		extUserCacheModel.roleId = getRoleId();
+
 		return extUserCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(77);
+		StringBundler sb = new StringBundler(79);
 
 		sb.append("{userId=");
 		sb.append(getUserId());
@@ -1445,6 +1592,8 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		sb.append(getEmailAddressVerified());
 		sb.append(", status=");
 		sb.append(getStatus());
+		sb.append(", roleId=");
+		sb.append(getRoleId());
 		sb.append("}");
 
 		return sb.toString();
@@ -1452,7 +1601,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(118);
+		StringBundler sb = new StringBundler(121);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.suez.user.synch.model.ExtUser");
@@ -1610,6 +1759,10 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 			"<column><column-name>status</column-name><column-value><![CDATA[");
 		sb.append(getStatus());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>roleId</column-name><column-value><![CDATA[");
+		sb.append(getRoleId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1659,5 +1812,6 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	private boolean _agreedToTermsOfUse;
 	private boolean _emailAddressVerified;
 	private int _status;
+	private long _roleId;
 	private ExtUser _escapedModel;
 }

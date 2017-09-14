@@ -23,9 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used by SOAP remote services.
+ * This class is used by SOAP remote services, specifically {@link com.liferay.suez.user.synch.service.http.ExtUserServiceSoap}.
  *
  * @author Brian Wing Shun Chan
+ * @see com.liferay.suez.user.synch.service.http.ExtUserServiceSoap
  * @generated
  */
 @ProviderType
@@ -71,6 +72,7 @@ public class ExtUserSoap implements Serializable {
 		soapModel.setAgreedToTermsOfUse(model.getAgreedToTermsOfUse());
 		soapModel.setEmailAddressVerified(model.getEmailAddressVerified());
 		soapModel.setStatus(model.getStatus());
+		soapModel.setRoleId(model.getRoleId());
 
 		return soapModel;
 	}
@@ -451,6 +453,14 @@ public class ExtUserSoap implements Serializable {
 		_status = status;
 	}
 
+	public long getRoleId() {
+		return _roleId;
+	}
+
+	public void setRoleId(long roleId) {
+		_roleId = roleId;
+	}
+
 	private long _userId;
 	private long _companyId;
 	private Date _createDate;
@@ -489,4 +499,5 @@ public class ExtUserSoap implements Serializable {
 	private boolean _agreedToTermsOfUse;
 	private boolean _emailAddressVerified;
 	private int _status;
+	private long _roleId;
 }

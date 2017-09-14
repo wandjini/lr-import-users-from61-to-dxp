@@ -43,6 +43,9 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import com.liferay.suez.user.synch.model.ExtUser;
 import com.liferay.suez.user.synch.service.ExtUserLocalService;
+import com.liferay.suez.user.synch.service.persistence.ExtCompanyPersistence;
+import com.liferay.suez.user.synch.service.persistence.ExtRolePersistence;
+import com.liferay.suez.user.synch.service.persistence.ExtUserFinder;
 import com.liferay.suez.user.synch.service.persistence.ExtUserPersistence;
 
 import java.io.Serializable;
@@ -309,6 +312,81 @@ public abstract class ExtUserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the ext company local service.
+	 *
+	 * @return the ext company local service
+	 */
+	public com.liferay.suez.user.synch.service.ExtCompanyLocalService getExtCompanyLocalService() {
+		return extCompanyLocalService;
+	}
+
+	/**
+	 * Sets the ext company local service.
+	 *
+	 * @param extCompanyLocalService the ext company local service
+	 */
+	public void setExtCompanyLocalService(
+		com.liferay.suez.user.synch.service.ExtCompanyLocalService extCompanyLocalService) {
+		this.extCompanyLocalService = extCompanyLocalService;
+	}
+
+	/**
+	 * Returns the ext company persistence.
+	 *
+	 * @return the ext company persistence
+	 */
+	public ExtCompanyPersistence getExtCompanyPersistence() {
+		return extCompanyPersistence;
+	}
+
+	/**
+	 * Sets the ext company persistence.
+	 *
+	 * @param extCompanyPersistence the ext company persistence
+	 */
+	public void setExtCompanyPersistence(
+		ExtCompanyPersistence extCompanyPersistence) {
+		this.extCompanyPersistence = extCompanyPersistence;
+	}
+
+	/**
+	 * Returns the ext role local service.
+	 *
+	 * @return the ext role local service
+	 */
+	public com.liferay.suez.user.synch.service.ExtRoleLocalService getExtRoleLocalService() {
+		return extRoleLocalService;
+	}
+
+	/**
+	 * Sets the ext role local service.
+	 *
+	 * @param extRoleLocalService the ext role local service
+	 */
+	public void setExtRoleLocalService(
+		com.liferay.suez.user.synch.service.ExtRoleLocalService extRoleLocalService) {
+		this.extRoleLocalService = extRoleLocalService;
+	}
+
+	/**
+	 * Returns the ext role persistence.
+	 *
+	 * @return the ext role persistence
+	 */
+	public ExtRolePersistence getExtRolePersistence() {
+		return extRolePersistence;
+	}
+
+	/**
+	 * Sets the ext role persistence.
+	 *
+	 * @param extRolePersistence the ext role persistence
+	 */
+	public void setExtRolePersistence(ExtRolePersistence extRolePersistence) {
+		this.extRolePersistence = extRolePersistence;
+	}
+
+	/**
 	 * Returns the ext user local service.
 	 *
 	 * @return the ext user local service
@@ -342,6 +420,24 @@ public abstract class ExtUserLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setExtUserPersistence(ExtUserPersistence extUserPersistence) {
 		this.extUserPersistence = extUserPersistence;
+	}
+
+	/**
+	 * Returns the ext user finder.
+	 *
+	 * @return the ext user finder
+	 */
+	public ExtUserFinder getExtUserFinder() {
+		return extUserFinder;
+	}
+
+	/**
+	 * Sets the ext user finder.
+	 *
+	 * @param extUserFinder the ext user finder
+	 */
+	public void setExtUserFinder(ExtUserFinder extUserFinder) {
+		this.extUserFinder = extUserFinder;
 	}
 
 	/**
@@ -509,10 +605,20 @@ public abstract class ExtUserLocalServiceBaseImpl extends BaseLocalServiceImpl
 		}
 	}
 
+	@BeanReference(type = com.liferay.suez.user.synch.service.ExtCompanyLocalService.class)
+	protected com.liferay.suez.user.synch.service.ExtCompanyLocalService extCompanyLocalService;
+	@BeanReference(type = ExtCompanyPersistence.class)
+	protected ExtCompanyPersistence extCompanyPersistence;
+	@BeanReference(type = com.liferay.suez.user.synch.service.ExtRoleLocalService.class)
+	protected com.liferay.suez.user.synch.service.ExtRoleLocalService extRoleLocalService;
+	@BeanReference(type = ExtRolePersistence.class)
+	protected ExtRolePersistence extRolePersistence;
 	@BeanReference(type = ExtUserLocalService.class)
 	protected ExtUserLocalService extUserLocalService;
 	@BeanReference(type = ExtUserPersistence.class)
 	protected ExtUserPersistence extUserPersistence;
+	@BeanReference(type = ExtUserFinder.class)
+	protected ExtUserFinder extUserFinder;
 	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@ServiceReference(type = com.liferay.portal.kernel.service.ClassNameLocalService.class)

@@ -36,6 +36,7 @@ import com.liferay.suez.user.synch.model.ExtUser;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -140,6 +141,9 @@ public interface ExtUserLocalService extends BaseLocalService,
 
 	public int countExtUsers();
 
+	public int countExtUsersByCompanyAndRole(long companyId, long roleId,
+		Date startDate, Date endDate);
+
 	/**
 	* Returns the number of ext users.
 	*
@@ -195,6 +199,9 @@ public interface ExtUserLocalService extends BaseLocalService,
 		int end, OrderByComparator<T> orderByComparator);
 
 	public List<ExtUser> findExtUsers(int start, int end);
+
+	public List<ExtUser> findExtUsersByCompanyAndRole(long companyId,
+		long roleId, Date startDate, Date endDate, int start, int end);
 
 	/**
 	* Returns a range of all the ext users.

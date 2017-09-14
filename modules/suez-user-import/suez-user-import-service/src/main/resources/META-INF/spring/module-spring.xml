@@ -1,8 +1,22 @@
 <?xml version="1.0"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.liferay.suez.user.synch.service.impl.ExtCompanyLocalServiceImpl" id="com.liferay.suez.user.synch.service.ExtCompanyLocalService" />
+	<bean class="com.liferay.suez.user.synch.service.impl.ExtCompanyServiceImpl" id="com.liferay.suez.user.synch.service.ExtCompanyService" />
+	<bean class="com.liferay.suez.user.synch.service.persistence.impl.ExtCompanyPersistenceImpl" id="com.liferay.suez.user.synch.service.persistence.ExtCompanyPersistence" parent="basePersistence">
+		<property name="dataSource" ref="extDataSource" />
+	</bean>
+	<bean class="com.liferay.suez.user.synch.service.impl.ExtRoleLocalServiceImpl" id="com.liferay.suez.user.synch.service.ExtRoleLocalService" />
+	<bean class="com.liferay.suez.user.synch.service.impl.ExtRoleServiceImpl" id="com.liferay.suez.user.synch.service.ExtRoleService" />
+	<bean class="com.liferay.suez.user.synch.service.persistence.impl.ExtRolePersistenceImpl" id="com.liferay.suez.user.synch.service.persistence.ExtRolePersistence" parent="basePersistence">
+		<property name="dataSource" ref="extDataSource" />
+	</bean>
 	<bean class="com.liferay.suez.user.synch.service.impl.ExtUserLocalServiceImpl" id="com.liferay.suez.user.synch.service.ExtUserLocalService" />
+	<bean class="com.liferay.suez.user.synch.service.impl.ExtUserServiceImpl" id="com.liferay.suez.user.synch.service.ExtUserService" />
 	<bean class="com.liferay.suez.user.synch.service.persistence.impl.ExtUserPersistenceImpl" id="com.liferay.suez.user.synch.service.persistence.ExtUserPersistence" parent="basePersistence">
+		<property name="dataSource" ref="extDataSource" />
+	</bean>
+	<bean class="com.liferay.suez.user.synch.service.persistence.impl.ExtUserFinderImpl" id="com.liferay.suez.user.synch.service.persistence.ExtUserFinder" parent="basePersistence">
 		<property name="dataSource" ref="extDataSource" />
 	</bean>
 </beans>

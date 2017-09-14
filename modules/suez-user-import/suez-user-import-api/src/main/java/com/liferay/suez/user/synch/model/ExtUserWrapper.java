@@ -95,6 +95,7 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 		attributes.put("agreedToTermsOfUse", getAgreedToTermsOfUse());
 		attributes.put("emailAddressVerified", getEmailAddressVerified());
 		attributes.put("status", getStatus());
+		attributes.put("roleId", getRoleId());
 
 		return attributes;
 	}
@@ -332,6 +333,12 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 
 		if (status != null) {
 			setStatus(status);
+		}
+
+		Long roleId = (Long)attributes.get("roleId");
+
+		if (roleId != null) {
+			setRoleId(roleId);
 		}
 	}
 
@@ -851,6 +858,16 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	}
 
 	/**
+	* Returns the role ID of this ext user.
+	*
+	* @return the role ID of this ext user
+	*/
+	@Override
+	public long getRoleId() {
+		return _extUser.getRoleId();
+	}
+
+	/**
 	* Returns the user ID of this ext user.
 	*
 	* @return the user ID of this ext user
@@ -1244,6 +1261,16 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	@Override
 	public void setReminderQueryQuestion(java.lang.String reminderQueryQuestion) {
 		_extUser.setReminderQueryQuestion(reminderQueryQuestion);
+	}
+
+	/**
+	* Sets the role ID of this ext user.
+	*
+	* @param roleId the role ID of this ext user
+	*/
+	@Override
+	public void setRoleId(long roleId) {
+		_extUser.setRoleId(roleId);
 	}
 
 	/**

@@ -6,6 +6,5 @@ dependencies {
 	compileOnly project(":modules:suez-user-import:suez-user-import-service")
 	compile group: "com.liferay", name: "com.liferay.portal.configuration.metatype", version: "2.0.0"
 	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
-	compileOnly project(":modules:suez-manage-users:suez-manage-users-api")
-	compileOnly project(":modules:suez-manage-users:suez-manage-users-service")
+	
 }

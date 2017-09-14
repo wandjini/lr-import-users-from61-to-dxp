@@ -379,6 +379,7 @@ public class ExtUserPersistenceImpl extends BasePersistenceImpl<ExtUser>
 		extUserImpl.setAgreedToTermsOfUse(extUser.isAgreedToTermsOfUse());
 		extUserImpl.setEmailAddressVerified(extUser.isEmailAddressVerified());
 		extUserImpl.setStatus(extUser.getStatus());
+		extUserImpl.setRoleId(extUser.getRoleId());
 
 		return extUserImpl;
 	}

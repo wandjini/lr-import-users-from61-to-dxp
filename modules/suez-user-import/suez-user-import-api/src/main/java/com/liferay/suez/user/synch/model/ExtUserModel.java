@@ -670,6 +670,20 @@ public interface ExtUserModel extends BaseModel<ExtUser>, ShardedModel {
 	 */
 	public void setStatus(int status);
 
+	/**
+	 * Returns the role ID of this ext user.
+	 *
+	 * @return the role ID of this ext user
+	 */
+	public long getRoleId();
+
+	/**
+	 * Sets the role ID of this ext user.
+	 *
+	 * @param roleId the role ID of this ext user
+	 */
+	public void setRoleId(long roleId);
+
 	@Override
 	public boolean isNew();
 

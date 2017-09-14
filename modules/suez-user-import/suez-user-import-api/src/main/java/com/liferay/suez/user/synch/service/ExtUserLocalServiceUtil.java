@@ -145,6 +145,13 @@ public class ExtUserLocalServiceUtil {
 		return getService().countExtUsers();
 	}
 
+	public static int countExtUsersByCompanyAndRole(long companyId,
+		long roleId, java.util.Date startDate, java.util.Date endDate) {
+		return getService()
+				   .countExtUsersByCompanyAndRole(companyId, roleId, startDate,
+			endDate);
+	}
+
 	/**
 	* Returns the number of ext users.
 	*
@@ -216,6 +223,14 @@ public class ExtUserLocalServiceUtil {
 	public static java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsers(
 		int start, int end) {
 		return getService().findExtUsers(start, end);
+	}
+
+	public static java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsersByCompanyAndRole(
+		long companyId, long roleId, java.util.Date startDate,
+		java.util.Date endDate, int start, int end) {
+		return getService()
+				   .findExtUsersByCompanyAndRole(companyId, roleId, startDate,
+			endDate, start, end);
 	}
 
 	/**

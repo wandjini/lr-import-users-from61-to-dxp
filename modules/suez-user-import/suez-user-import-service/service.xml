@@ -3,7 +3,34 @@
 
 <service-builder package-path="com.liferay.suez.user.synch">
 	<namespace>ExtDB</namespace>
-	<entity local-service="true" name="ExtUser"  remote-service="false" uuid="false" data-source="extDataSource" table="user_" >
+	<entity name="ExtCompany" local-service="true" data-source="extDataSource" table="company">
+
+		<!-- PK fields -->
+
+		<column name="companyId" type="long" primary="true" />
+
+		<!-- Other fields -->
+
+		<column name="accountId" type="long" />
+		<column name="webId" type="String" />
+		<column name="key" type="String" />
+		<column name="mx" type="String" />
+		<column name="homeURL" type="String" />
+		<column name="logoId" type="long" />
+		<column name="system" type="boolean" />
+		<column name="maxUsers" type="int" />
+		<column name="active" type="boolean" />
+
+		<!-- Finder methods -->
+
+		<finder name="WebId" return-type="Company" unique="true">
+			<finder-column name="webId" />
+		</finder>
+		
+	</entity>
+	
+	
+	<entity local-service="true" name="ExtUser"  uuid="false" data-source="extDataSource" table="user_" >
 
 		<!-- PK fields -->
 
@@ -51,9 +78,41 @@
 		<column name="agreedToTermsOfUse" type="boolean" />
 		<column name="emailAddressVerified" type="boolean" />
 		<column name="status" type="int" />
+		<column name="roleId" type="long" />
 
 
 
 	
+	</entity>
+	<entity name="ExtRole" local-service="true" data-source="extDataSource" table="role_">
+
+		<!-- PK fields -->
+
+		<column name="roleId" type="long" primary="true" accessor="true" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="classNameId" type="long" />
+		<column name="classPK" type="long" />
+		<column name="name" type="String" accessor="true" />
+		<column name="title" type="String" localized="true" />
+		<column name="description" type="String" localized="true" />
+		<column name="type" type="int" />
+		<column name="subtype" type="String" />
+		
+		<!-- Finder methods -->
+
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+		<finder name="C_N" return-type="Role" unique="true">
+			<finder-column name="companyId" />
+			<finder-column name="name" case-sensitive="false" />
+		</finder>
+		
 	</entity>
 </service-builder>

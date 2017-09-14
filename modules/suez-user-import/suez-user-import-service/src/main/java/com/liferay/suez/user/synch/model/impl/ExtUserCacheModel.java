@@ -65,7 +65,7 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(77);
+		StringBundler sb = new StringBundler(79);
 
 		sb.append("{userId=");
 		sb.append(userId);
@@ -143,6 +143,8 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 		sb.append(emailAddressVerified);
 		sb.append(", status=");
 		sb.append(status);
+		sb.append(", roleId=");
+		sb.append(roleId);
 		sb.append("}");
 
 		return sb.toString();
@@ -341,6 +343,7 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 		extUserImpl.setAgreedToTermsOfUse(agreedToTermsOfUse);
 		extUserImpl.setEmailAddressVerified(emailAddressVerified);
 		extUserImpl.setStatus(status);
+		extUserImpl.setRoleId(roleId);
 
 		extUserImpl.resetOriginalValues();
 
@@ -400,6 +403,8 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 		emailAddressVerified = objectInput.readBoolean();
 
 		status = objectInput.readInt();
+
+		roleId = objectInput.readLong();
 	}
 
 	@Override
@@ -561,6 +566,8 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 		objectOutput.writeBoolean(emailAddressVerified);
 
 		objectOutput.writeInt(status);
+
+		objectOutput.writeLong(roleId);
 	}
 
 	public long userId;
@@ -601,4 +608,5 @@ public class ExtUserCacheModel implements CacheModel<ExtUser>, Externalizable {
 	public boolean agreedToTermsOfUse;
 	public boolean emailAddressVerified;
 	public int status;
+	public long roleId;
 }

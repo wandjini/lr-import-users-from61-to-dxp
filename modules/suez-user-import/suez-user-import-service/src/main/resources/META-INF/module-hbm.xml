@@ -2,7 +2,36 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.liferay.suez.user.synch.model.ExtCompany" />
+	<import class="com.liferay.suez.user.synch.model.ExtRole" />
 	<import class="com.liferay.suez.user.synch.model.ExtUser" />
+	<class name="com.liferay.suez.user.synch.model.impl.ExtCompanyImpl" table="company">
+		<id name="companyId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="accountId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="webId" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property column="key_" name="key" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="mx" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="homeURL" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="logoId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="system" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="maxUsers" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property column="active_" name="active" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+	</class>
+	<class name="com.liferay.suez.user.synch.model.impl.ExtRoleImpl" table="role_">
+		<id name="roleId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property column="type_" name="type" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="subtype" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
 	<class name="com.liferay.suez.user.synch.model.impl.ExtUserImpl" table="user_">
 		<id name="userId" type="long">
 			<generator class="assigned" />
@@ -44,5 +73,6 @@
 		<property name="agreedToTermsOfUse" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="emailAddressVerified" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 </hibernate-mapping>

@@ -16,6 +16,7 @@ package com.liferay.suez.user.synch.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import java.util.Date;
 import java.util.List;
 
 import com.liferay.suez.user.synch.model.ExtUser;
@@ -51,5 +52,17 @@ public class ExtUserLocalServiceImpl extends ExtUserLocalServiceBaseImpl {
 	public int countExtUsers(){
 		
 		return extUserPersistence.countAll();
+	}
+	
+	public List<ExtUser> findExtUsersByCompanyAndRole(long companyId, long roleId, 
+			Date startDate, Date endDate, int start, int end){
+		
+		return extUserFinder.findUsersByCompanyAndRole(companyId, roleId, startDate, endDate, start, end);
+	}
+	
+	public int countExtUsersByCompanyAndRole(long companyId, long roleId, 
+			Date startDate, Date endDate){
+		
+		return extUserFinder.countUsersByCompanyAndRole(companyId, roleId, startDate, endDate);
 	}
 }
