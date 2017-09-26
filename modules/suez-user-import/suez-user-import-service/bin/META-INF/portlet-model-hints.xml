@@ -11,7 +11,6 @@
 		<field name="logoId" type="long" />
 		<field name="system" type="boolean" />
 		<field name="maxUsers" type="int" />
-		<field name="active" type="boolean" />
 	</model>
 	<model name="com.liferay.suez.user.synch.model.ExtRole">
 		<field name="roleId" type="long" />
@@ -61,8 +60,6 @@
 		<field name="lockout" type="boolean" />
 		<field name="lockoutDate" type="Date" />
 		<field name="agreedToTermsOfUse" type="boolean" />
-		<field name="emailAddressVerified" type="boolean" />
 		<field name="status" type="int" />
-		<field name="roleId" type="long" />
 	</model>
 </model-hints>

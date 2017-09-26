@@ -106,9 +106,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 			{ "lockout", Types.BOOLEAN },
 			{ "lockoutDate", Types.TIMESTAMP },
 			{ "agreedToTermsOfUse", Types.BOOLEAN },
-			{ "emailAddressVerified", Types.BOOLEAN },
-			{ "status", Types.INTEGER },
-			{ "roleId", Types.BIGINT }
+			{ "status", Types.INTEGER }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -149,12 +147,10 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		TABLE_COLUMNS_MAP.put("lockout", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("lockoutDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("agreedToTermsOfUse", Types.BOOLEAN);
-		TABLE_COLUMNS_MAP.put("emailAddressVerified", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("roleId", Types.BIGINT);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table user_ (userId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,defaultUser BOOLEAN,contactId LONG,password_ VARCHAR(75) null,passwordEncrypted BOOLEAN,passwordReset BOOLEAN,passwordModifiedDate DATE null,digest VARCHAR(75) null,reminderQueryQuestion VARCHAR(75) null,reminderQueryAnswer VARCHAR(75) null,graceLoginCount INTEGER,screenName VARCHAR(75) null,emailAddress VARCHAR(75) null,facebookId LONG,openId VARCHAR(75) null,portraitId LONG,languageId VARCHAR(75) null,timeZoneId VARCHAR(75) null,greeting VARCHAR(75) null,comments VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,jobTitle VARCHAR(75) null,loginDate DATE null,loginIP VARCHAR(75) null,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,lastFailedLoginDate DATE null,failedLoginAttempts INTEGER,lockout BOOLEAN,lockoutDate DATE null,agreedToTermsOfUse BOOLEAN,emailAddressVerified BOOLEAN,status INTEGER,roleId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table user_ (userId LONG not null primary key,companyId LONG,createDate DATE null,modifiedDate DATE null,defaultUser BOOLEAN,contactId LONG,password_ VARCHAR(75) null,passwordEncrypted BOOLEAN,passwordReset BOOLEAN,passwordModifiedDate DATE null,digest VARCHAR(75) null,reminderQueryQuestion VARCHAR(75) null,reminderQueryAnswer VARCHAR(75) null,graceLoginCount INTEGER,screenName VARCHAR(75) null,emailAddress VARCHAR(75) null,facebookId LONG,openId VARCHAR(75) null,portraitId LONG,languageId VARCHAR(75) null,timeZoneId VARCHAR(75) null,greeting VARCHAR(75) null,comments VARCHAR(75) null,firstName VARCHAR(75) null,middleName VARCHAR(75) null,lastName VARCHAR(75) null,jobTitle VARCHAR(75) null,loginDate DATE null,loginIP VARCHAR(75) null,lastLoginDate DATE null,lastLoginIP VARCHAR(75) null,lastFailedLoginDate DATE null,failedLoginAttempts INTEGER,lockout BOOLEAN,lockoutDate DATE null,agreedToTermsOfUse BOOLEAN,status INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table user_";
 	public static final String ORDER_BY_JPQL = " ORDER BY extUser.userId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY user_.userId ASC";
@@ -218,9 +214,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		model.setLockout(soapModel.getLockout());
 		model.setLockoutDate(soapModel.getLockoutDate());
 		model.setAgreedToTermsOfUse(soapModel.getAgreedToTermsOfUse());
-		model.setEmailAddressVerified(soapModel.getEmailAddressVerified());
 		model.setStatus(soapModel.getStatus());
-		model.setRoleId(soapModel.getRoleId());
 
 		return model;
 	}
@@ -321,9 +315,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		attributes.put("lockout", getLockout());
 		attributes.put("lockoutDate", getLockoutDate());
 		attributes.put("agreedToTermsOfUse", getAgreedToTermsOfUse());
-		attributes.put("emailAddressVerified", getEmailAddressVerified());
 		attributes.put("status", getStatus());
-		attributes.put("roleId", getRoleId());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -553,23 +545,10 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 			setAgreedToTermsOfUse(agreedToTermsOfUse);
 		}
 
-		Boolean emailAddressVerified = (Boolean)attributes.get(
-				"emailAddressVerified");
-
-		if (emailAddressVerified != null) {
-			setEmailAddressVerified(emailAddressVerified);
-		}
-
 		Integer status = (Integer)attributes.get("status");
 
 		if (status != null) {
 			setStatus(status);
-		}
-
-		Long roleId = (Long)attributes.get("roleId");
-
-		if (roleId != null) {
-			setRoleId(roleId);
 		}
 	}
 
@@ -1106,23 +1085,6 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 
 	@JSON
 	@Override
-	public boolean getEmailAddressVerified() {
-		return _emailAddressVerified;
-	}
-
-	@JSON
-	@Override
-	public boolean isEmailAddressVerified() {
-		return _emailAddressVerified;
-	}
-
-	@Override
-	public void setEmailAddressVerified(boolean emailAddressVerified) {
-		_emailAddressVerified = emailAddressVerified;
-	}
-
-	@JSON
-	@Override
 	public int getStatus() {
 		return _status;
 	}
@@ -1130,17 +1092,6 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	@Override
 	public void setStatus(int status) {
 		_status = status;
-	}
-
-	@JSON
-	@Override
-	public long getRoleId() {
-		return _roleId;
-	}
-
-	@Override
-	public void setRoleId(long roleId) {
-		_roleId = roleId;
 	}
 
 	@Override
@@ -1206,9 +1157,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		extUserImpl.setLockout(getLockout());
 		extUserImpl.setLockoutDate(getLockoutDate());
 		extUserImpl.setAgreedToTermsOfUse(getAgreedToTermsOfUse());
-		extUserImpl.setEmailAddressVerified(getEmailAddressVerified());
 		extUserImpl.setStatus(getStatus());
-		extUserImpl.setRoleId(getRoleId());
 
 		extUserImpl.resetOriginalValues();
 
@@ -1503,18 +1452,14 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 
 		extUserCacheModel.agreedToTermsOfUse = getAgreedToTermsOfUse();
 
-		extUserCacheModel.emailAddressVerified = getEmailAddressVerified();
-
 		extUserCacheModel.status = getStatus();
-
-		extUserCacheModel.roleId = getRoleId();
 
 		return extUserCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(79);
+		StringBundler sb = new StringBundler(75);
 
 		sb.append("{userId=");
 		sb.append(getUserId());
@@ -1588,12 +1533,8 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		sb.append(getLockoutDate());
 		sb.append(", agreedToTermsOfUse=");
 		sb.append(getAgreedToTermsOfUse());
-		sb.append(", emailAddressVerified=");
-		sb.append(getEmailAddressVerified());
 		sb.append(", status=");
 		sb.append(getStatus());
-		sb.append(", roleId=");
-		sb.append(getRoleId());
 		sb.append("}");
 
 		return sb.toString();
@@ -1601,7 +1542,7 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(121);
+		StringBundler sb = new StringBundler(115);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.suez.user.synch.model.ExtUser");
@@ -1752,16 +1693,8 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 		sb.append(getAgreedToTermsOfUse());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>emailAddressVerified</column-name><column-value><![CDATA[");
-		sb.append(getEmailAddressVerified());
-		sb.append("]]></column-value></column>");
-		sb.append(
 			"<column><column-name>status</column-name><column-value><![CDATA[");
 		sb.append(getStatus());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>roleId</column-name><column-value><![CDATA[");
-		sb.append(getRoleId());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -1810,8 +1743,6 @@ public class ExtUserModelImpl extends BaseModelImpl<ExtUser>
 	private boolean _lockout;
 	private Date _lockoutDate;
 	private boolean _agreedToTermsOfUse;
-	private boolean _emailAddressVerified;
 	private int _status;
-	private long _roleId;
 	private ExtUser _escapedModel;
 }

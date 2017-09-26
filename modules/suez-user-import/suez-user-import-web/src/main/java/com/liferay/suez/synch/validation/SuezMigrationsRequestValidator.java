@@ -12,7 +12,7 @@ import com.liferay.suez.synch.users.util.SuezMigrationRequest;
  */
 public class SuezMigrationsRequestValidator {
 
-public static boolean isSuezMigrationRequestValid(SuezMigrationRequest  suezMigrationRequest, List<String> errors){
+public static boolean isSuezMigrationRequestValid(SuezMigrationRequest  suezMigrationRequest, int extRolesSize, List<String> errors){
 		boolean result = true;
 		
 		if(suezMigrationRequest.getExtCompanyId() <=0){
@@ -37,7 +37,7 @@ public static boolean isSuezMigrationRequestValid(SuezMigrationRequest  suezMigr
 		}
 		if(suezMigrationRequest.getExtRoleNewRoleMap() == null 
 				|| suezMigrationRequest.getExtRoleNewRoleMap().keySet().isEmpty()
-				|| suezMigrationRequest.getExtRoleNewRoleMap().keySet().size() < 3){
+				|| suezMigrationRequest.getExtRoleNewRoleMap().keySet().size() != extRolesSize){
 			errors.add("invalid-roles-mapping");
 			result = false;
 		}

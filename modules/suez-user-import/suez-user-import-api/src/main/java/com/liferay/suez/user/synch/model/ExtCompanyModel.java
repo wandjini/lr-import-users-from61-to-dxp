@@ -200,27 +200,6 @@ public interface ExtCompanyModel extends BaseModel<ExtCompany>, ShardedModel {
 	 */
 	public void setMaxUsers(int maxUsers);
 
-	/**
-	 * Returns the active of this ext company.
-	 *
-	 * @return the active of this ext company
-	 */
-	public boolean getActive();
-
-	/**
-	 * Returns <code>true</code> if this ext company is active.
-	 *
-	 * @return <code>true</code> if this ext company is active; <code>false</code> otherwise
-	 */
-	public boolean isActive();
-
-	/**
-	 * Sets whether this ext company is active.
-	 *
-	 * @param active the active of this ext company
-	 */
-	public void setActive(boolean active);
-
 	@Override
 	public boolean isNew();
 

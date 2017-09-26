@@ -93,9 +93,7 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 		attributes.put("lockout", getLockout());
 		attributes.put("lockoutDate", getLockoutDate());
 		attributes.put("agreedToTermsOfUse", getAgreedToTermsOfUse());
-		attributes.put("emailAddressVerified", getEmailAddressVerified());
 		attributes.put("status", getStatus());
-		attributes.put("roleId", getRoleId());
 
 		return attributes;
 	}
@@ -322,23 +320,10 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 			setAgreedToTermsOfUse(agreedToTermsOfUse);
 		}
 
-		Boolean emailAddressVerified = (Boolean)attributes.get(
-				"emailAddressVerified");
-
-		if (emailAddressVerified != null) {
-			setEmailAddressVerified(emailAddressVerified);
-		}
-
 		Integer status = (Integer)attributes.get("status");
 
 		if (status != null) {
 			setStatus(status);
-		}
-
-		Long roleId = (Long)attributes.get("roleId");
-
-		if (roleId != null) {
-			setRoleId(roleId);
 		}
 	}
 
@@ -370,16 +355,6 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	@Override
 	public boolean getDefaultUser() {
 		return _extUser.getDefaultUser();
-	}
-
-	/**
-	* Returns the email address verified of this ext user.
-	*
-	* @return the email address verified of this ext user
-	*/
-	@Override
-	public boolean getEmailAddressVerified() {
-		return _extUser.getEmailAddressVerified();
 	}
 
 	/**
@@ -435,16 +410,6 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	@Override
 	public boolean isDefaultUser() {
 		return _extUser.isDefaultUser();
-	}
-
-	/**
-	* Returns <code>true</code> if this ext user is email address verified.
-	*
-	* @return <code>true</code> if this ext user is email address verified; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isEmailAddressVerified() {
-		return _extUser.isEmailAddressVerified();
 	}
 
 	@Override
@@ -858,16 +823,6 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	}
 
 	/**
-	* Returns the role ID of this ext user.
-	*
-	* @return the role ID of this ext user
-	*/
-	@Override
-	public long getRoleId() {
-		return _extUser.getRoleId();
-	}
-
-	/**
 	* Returns the user ID of this ext user.
 	*
 	* @return the user ID of this ext user
@@ -965,16 +920,6 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	@Override
 	public void setEmailAddress(java.lang.String emailAddress) {
 		_extUser.setEmailAddress(emailAddress);
-	}
-
-	/**
-	* Sets whether this ext user is email address verified.
-	*
-	* @param emailAddressVerified the email address verified of this ext user
-	*/
-	@Override
-	public void setEmailAddressVerified(boolean emailAddressVerified) {
-		_extUser.setEmailAddressVerified(emailAddressVerified);
 	}
 
 	@Override
@@ -1261,16 +1206,6 @@ public class ExtUserWrapper implements ExtUser, ModelWrapper<ExtUser> {
 	@Override
 	public void setReminderQueryQuestion(java.lang.String reminderQueryQuestion) {
 		_extUser.setReminderQueryQuestion(reminderQueryQuestion);
-	}
-
-	/**
-	* Sets the role ID of this ext user.
-	*
-	* @param roleId the role ID of this ext user
-	*/
-	@Override
-	public void setRoleId(long roleId) {
-		_extUser.setRoleId(roleId);
 	}
 
 	/**

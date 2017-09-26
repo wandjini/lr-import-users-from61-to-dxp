@@ -611,7 +611,6 @@ public class ExtCompanyPersistenceImpl extends BasePersistenceImpl<ExtCompany>
 		extCompanyImpl.setLogoId(extCompany.getLogoId());
 		extCompanyImpl.setSystem(extCompany.isSystem());
 		extCompanyImpl.setMaxUsers(extCompany.getMaxUsers());
-		extCompanyImpl.setActive(extCompany.isActive());
 
 		return extCompanyImpl;
 	}
@@ -1036,6 +1035,6 @@ public class ExtCompanyPersistenceImpl extends BasePersistenceImpl<ExtCompany>
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No ExtCompany exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(ExtCompanyPersistenceImpl.class);
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
-				"key", "active"
+				"key"
 			});
 }

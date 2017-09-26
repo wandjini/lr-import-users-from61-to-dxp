@@ -18,6 +18,10 @@ import aQute.bnd.annotation.ProviderType;
 
 import java.util.List;
 
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.suez.user.synch.model.ExtRole;
 import com.liferay.suez.user.synch.service.base.ExtRoleLocalServiceBaseImpl;
 
@@ -50,4 +54,15 @@ public class ExtRoleLocalServiceImpl extends ExtRoleLocalServiceBaseImpl {
 	public List<ExtRole> getExtRolesByCompany(long companyId){
 		return extRolePersistence.findByCompanyId(companyId);
 	}
+	
+	public List<ExtRole> getExtRolesByCompanyAndName(long companyId, String name){
+		DynamicQuery rolesDynamicQuery = extRoleLocalService.dynamicQuery();
+		rolesDynamicQuery.add(RestrictionsFactoryUtil.eq("companyId", companyId));
+		if(Validator.isNotNull(name)){
+			rolesDynamicQuery.add(RestrictionsFactoryUtil.ilike("name", "%"+name+"%"));
+		}
+		rolesDynamicQuery.addOrder(OrderFactoryUtil.asc("name"));
+		return extRoleLocalService.dynamicQuery(rolesDynamicQuery);
+	}
+	
 }

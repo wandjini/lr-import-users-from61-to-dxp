@@ -92,7 +92,7 @@ public class ExtUserToUserAdapter {
 		user.setLastLoginDate(this.extUser.getLastLoginDate());
 		user.setLastLoginIP(this.extUser.getLastLoginIP());
 		user.setLastFailedLoginDate(this.extUser.getLastFailedLoginDate());
-		user.setEmailAddressVerified(this.extUser.getEmailAddressVerified());
+		//user.setEmailAddressVerified(this.extUser.getEmailAddressVerified());
 		
 		Company company = _companyLocalService.fetchCompany(companyId);
 		
@@ -130,7 +130,7 @@ public class ExtUserToUserAdapter {
 		user.setStatus(this.extUser.getStatus());
 		//user.setExpandoBridgeAttributes(null);
 
-		_userLocalService.updateUser(user);
+		user = _userLocalService.updateUser(user);
 
 		// Contact
 
@@ -180,7 +180,7 @@ public class ExtUserToUserAdapter {
 			User.class.getName(), user.getUserId(),
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, (Map<Locale, String>)null,
 			null, 0, true, GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,
-			StringPool.SLASH + this.extUser.getScreenName(), false, true, null);
+			StringPool.SLASH + user.getScreenName(), false, true, null);
 
 		// Groups
 		
@@ -214,7 +214,7 @@ public class ExtUserToUserAdapter {
 		if (roleIds != null) {
 			roleIds = UsersAdminUtil.addRequiredRoles(user, roleIds);
 
-			_roleLocalService.setUserRoles(user.getUserId(), roleIds);
+			//_roleLocalService.setUserRoles(user.getUserId(), roleIds);
 			
 		}
 		
@@ -234,14 +234,14 @@ public class ExtUserToUserAdapter {
 			userPersistence.setUserGroups(userId, userGroupIds);
 		}
 		 */
-		_userLocalService.addDefaultUserGroups(user.getUserId());
+		//_userLocalService.addDefaultUserGroups(user.getUserId());
 
 		// Resources
 
 		_resourceLocalService.addResources(
 			companyId, 0, creatorUserId, User.class.getName(), user.getUserId(),
 			false, false, false);
-
+		
 		// Asset
 
 
@@ -253,20 +253,20 @@ public class ExtUserToUserAdapter {
 
 		long workflowUserId = creatorUserId;
 
-		if (workflowUserId == user.getUserId()) {
-			workflowUserId = defltUser.getUserId();
-		}
-
-		ServiceContext	workflowServiceContext = new ServiceContext();
-
-		workflowServiceContext.setAttribute("autoPassword", false);
-		//workflowServiceContext.setAttribute("passwordUnencrypted", password1);
-		workflowServiceContext.setAttribute("sendEmail", null);
-
-		WorkflowHandlerRegistryUtil.startWorkflowInstance(
-			companyId, workflowUserId, User.class.getName(), user.getUserId(), user,
-			workflowServiceContext);
-
+			if (workflowUserId == user.getUserId()) {
+				workflowUserId = defltUser.getUserId();
+			}
+	
+			ServiceContext	workflowServiceContext = new ServiceContext();
+	
+			workflowServiceContext.setAttribute("autoPassword", false);
+			//workflowServiceContext.setAttribute("passwordUnencrypted", password1);
+			workflowServiceContext.setAttribute("sendEmail", null);
+	
+			WorkflowHandlerRegistryUtil.startWorkflowInstance(
+				companyId, workflowUserId, User.class.getName(), user.getUserId(), user,
+				workflowServiceContext);
+		 
 		
 		return user;
 	}

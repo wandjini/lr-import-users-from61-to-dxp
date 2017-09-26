@@ -64,7 +64,7 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{companyId=");
 		sb.append(companyId);
@@ -84,8 +84,6 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 		sb.append(system);
 		sb.append(", maxUsers=");
 		sb.append(maxUsers);
-		sb.append(", active=");
-		sb.append(active);
 		sb.append("}");
 
 		return sb.toString();
@@ -129,7 +127,6 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 		extCompanyImpl.setLogoId(logoId);
 		extCompanyImpl.setSystem(system);
 		extCompanyImpl.setMaxUsers(maxUsers);
-		extCompanyImpl.setActive(active);
 
 		extCompanyImpl.resetOriginalValues();
 
@@ -151,8 +148,6 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 		system = objectInput.readBoolean();
 
 		maxUsers = objectInput.readInt();
-
-		active = objectInput.readBoolean();
 	}
 
 	@Override
@@ -195,8 +190,6 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 		objectOutput.writeBoolean(system);
 
 		objectOutput.writeInt(maxUsers);
-
-		objectOutput.writeBoolean(active);
 	}
 
 	public long companyId;
@@ -208,5 +201,4 @@ public class ExtCompanyCacheModel implements CacheModel<ExtCompany>,
 	public long logoId;
 	public boolean system;
 	public int maxUsers;
-	public boolean active;
 }

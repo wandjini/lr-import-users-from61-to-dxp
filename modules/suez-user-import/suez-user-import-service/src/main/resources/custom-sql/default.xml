@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 
 <custom-sql>
-	<sql id="com.liferay.suez.user.synch.service.persistence.impl.ExtUserFinder.findUsersByCompanyAndRole">
+	<sql id="com.liferay.suez.user.synch.service.persistence.ExtUserFinder.findUsersByCompanyAndRole">
 	<![CDATA[
 		SELECT u.*
 		FROM (user_ u 
 				INNER JOIN 
-				users_roles ur ON ( ur.userid = u.userid
-					  				AND ur.roleid = ?
+				UserGroupRole ugr ON ( ugr.userid = u.userid
+					  				AND ugr.roleid = ?
 					  		      )
 			)
 		WHERE u.companyid = ?		
 		]]>
 	</sql>
-	<sql id="com.liferay.suez.user.synch.service.persistence.impl.ExtUserFinder.countUsersByCompanyAndRole">
+	<sql id="com.liferay.suez.user.synch.service.persistence.ExtUserFinder.countUsersByCompanyAndRole">
 		<![CDATA[
 			SELECT count(*)
 			FROM (user_ u 
 					INNER JOIN 
-					users_roles ur ON ( ur.userid = u.userid
-						  				AND ur.roleid = ? 
+					UserGroupRole ugr ON ( ugr.userid = u.userid
+						  				AND ugr.roleid = ? 
 						  		
 						  		   	   )
 				)

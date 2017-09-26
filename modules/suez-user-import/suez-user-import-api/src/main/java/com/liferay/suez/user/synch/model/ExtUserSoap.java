@@ -70,9 +70,7 @@ public class ExtUserSoap implements Serializable {
 		soapModel.setLockout(model.getLockout());
 		soapModel.setLockoutDate(model.getLockoutDate());
 		soapModel.setAgreedToTermsOfUse(model.getAgreedToTermsOfUse());
-		soapModel.setEmailAddressVerified(model.getEmailAddressVerified());
 		soapModel.setStatus(model.getStatus());
-		soapModel.setRoleId(model.getRoleId());
 
 		return soapModel;
 	}
@@ -433,32 +431,12 @@ public class ExtUserSoap implements Serializable {
 		_agreedToTermsOfUse = agreedToTermsOfUse;
 	}
 
-	public boolean getEmailAddressVerified() {
-		return _emailAddressVerified;
-	}
-
-	public boolean isEmailAddressVerified() {
-		return _emailAddressVerified;
-	}
-
-	public void setEmailAddressVerified(boolean emailAddressVerified) {
-		_emailAddressVerified = emailAddressVerified;
-	}
-
 	public int getStatus() {
 		return _status;
 	}
 
 	public void setStatus(int status) {
 		_status = status;
-	}
-
-	public long getRoleId() {
-		return _roleId;
-	}
-
-	public void setRoleId(long roleId) {
-		_roleId = roleId;
 	}
 
 	private long _userId;
@@ -497,7 +475,5 @@ public class ExtUserSoap implements Serializable {
 	private boolean _lockout;
 	private Date _lockoutDate;
 	private boolean _agreedToTermsOfUse;
-	private boolean _emailAddressVerified;
 	private int _status;
-	private long _roleId;
 }

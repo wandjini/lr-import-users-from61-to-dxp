@@ -74,8 +74,7 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 			{ "homeURL", Types.VARCHAR },
 			{ "logoId", Types.BIGINT },
 			{ "system", Types.BOOLEAN },
-			{ "maxUsers", Types.INTEGER },
-			{ "active_", Types.BOOLEAN }
+			{ "maxUsers", Types.INTEGER }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -89,10 +88,9 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		TABLE_COLUMNS_MAP.put("logoId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("system", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("maxUsers", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("active_", Types.BOOLEAN);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table company (companyId LONG not null primary key,accountId LONG,webId VARCHAR(75) null,key_ VARCHAR(75) null,mx VARCHAR(75) null,homeURL VARCHAR(75) null,logoId LONG,system BOOLEAN,maxUsers INTEGER,active_ BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table company (companyId LONG not null primary key,accountId LONG,webId VARCHAR(75) null,key_ VARCHAR(75) null,mx VARCHAR(75) null,homeURL VARCHAR(75) null,logoId LONG,system BOOLEAN,maxUsers INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table company";
 	public static final String ORDER_BY_JPQL = " ORDER BY extCompany.companyId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY company.companyId ASC";
@@ -133,7 +131,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		model.setLogoId(soapModel.getLogoId());
 		model.setSystem(soapModel.getSystem());
 		model.setMaxUsers(soapModel.getMaxUsers());
-		model.setActive(soapModel.getActive());
 
 		return model;
 	}
@@ -207,7 +204,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		attributes.put("logoId", getLogoId());
 		attributes.put("system", getSystem());
 		attributes.put("maxUsers", getMaxUsers());
-		attributes.put("active", getActive());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -269,12 +265,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 
 		if (maxUsers != null) {
 			setMaxUsers(maxUsers);
-		}
-
-		Boolean active = (Boolean)attributes.get("active");
-
-		if (active != null) {
-			setActive(active);
 		}
 	}
 
@@ -413,23 +403,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		_maxUsers = maxUsers;
 	}
 
-	@JSON
-	@Override
-	public boolean getActive() {
-		return _active;
-	}
-
-	@JSON
-	@Override
-	public boolean isActive() {
-		return _active;
-	}
-
-	@Override
-	public void setActive(boolean active) {
-		_active = active;
-	}
-
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -470,7 +443,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		extCompanyImpl.setLogoId(getLogoId());
 		extCompanyImpl.setSystem(getSystem());
 		extCompanyImpl.setMaxUsers(getMaxUsers());
-		extCompanyImpl.setActive(getActive());
 
 		extCompanyImpl.resetOriginalValues();
 
@@ -584,14 +556,12 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 
 		extCompanyCacheModel.maxUsers = getMaxUsers();
 
-		extCompanyCacheModel.active = getActive();
-
 		return extCompanyCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{companyId=");
 		sb.append(getCompanyId());
@@ -611,8 +581,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 		sb.append(getSystem());
 		sb.append(", maxUsers=");
 		sb.append(getMaxUsers());
-		sb.append(", active=");
-		sb.append(getActive());
 		sb.append("}");
 
 		return sb.toString();
@@ -620,7 +588,7 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(34);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.suez.user.synch.model.ExtCompany");
@@ -662,10 +630,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 			"<column><column-name>maxUsers</column-name><column-value><![CDATA[");
 		sb.append(getMaxUsers());
 		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>active</column-name><column-value><![CDATA[");
-		sb.append(getActive());
-		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -686,7 +650,6 @@ public class ExtCompanyModelImpl extends BaseModelImpl<ExtCompany>
 	private long _logoId;
 	private boolean _system;
 	private int _maxUsers;
-	private boolean _active;
 	private long _columnBitmask;
 	private ExtCompany _escapedModel;
 }

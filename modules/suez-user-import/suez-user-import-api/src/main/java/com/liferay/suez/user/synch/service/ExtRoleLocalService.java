@@ -212,6 +212,10 @@ public interface ExtRoleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<ExtRole> getExtRolesByCompany(long companyId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<ExtRole> getExtRolesByCompanyAndName(long companyId,
+		java.lang.String name);
+
 	/**
 	* Returns the number of rows matching the dynamic query.
 	*

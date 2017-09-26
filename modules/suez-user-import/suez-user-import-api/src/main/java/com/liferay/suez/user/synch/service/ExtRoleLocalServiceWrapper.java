@@ -243,6 +243,12 @@ public class ExtRoleLocalServiceWrapper implements ExtRoleLocalService,
 		return _extRoleLocalService.getExtRolesByCompany(companyId);
 	}
 
+	@Override
+	public java.util.List<com.liferay.suez.user.synch.model.ExtRole> getExtRolesByCompanyAndName(
+		long companyId, java.lang.String name) {
+		return _extRoleLocalService.getExtRolesByCompanyAndName(companyId, name);
+	}
+
 	/**
 	* Returns the number of rows matching the dynamic query.
 	*

@@ -9,6 +9,12 @@
 <%@page import="com.liferay.portal.kernel.util.CalendarFactoryUtil"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
+<%@page import="com.liferay.portal.kernel.model.Group"%>
+<%@page import="com.liferay.suez.user.synch.model.ExtRole"%>
+<%@page import="com.liferay.suez.user.synch.model.ExtCompany"%>
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.portal.kernel.model.Role"%>
+
 
 
 <liferay-theme:defineObjects />

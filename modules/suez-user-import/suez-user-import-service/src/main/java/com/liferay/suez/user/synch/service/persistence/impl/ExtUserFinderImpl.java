@@ -1,6 +1,5 @@
 package com.liferay.suez.user.synch.service.persistence.impl;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +10,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.DateUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.suez.user.synch.model.ExtUser;
 import com.liferay.suez.user.synch.model.impl.ExtUserImpl;
 import com.liferay.suez.user.synch.service.persistence.ExtUserFinder;
@@ -24,12 +21,12 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 		 Session session = null;
 		    try {
 		        session = openSession();
-
+		        boolean isVAlidDates = startDate !=null && endDate != null;
 		        String sql = CustomSQLUtil.get(getClass(),
 		        		FIND_BY_ROLE_COMPANY );
 		        
-		        if(startDate !=null && endDate != null){
-		        	sql+= " AND (u.createdate BETWEEN "+startDate + "AND "+ endDate+")";
+		        if(isVAlidDates){
+		        	sql+= " AND (u.modifieddate BETWEEN ?  AND ? )";
 		        }
 		        SQLQuery q = session.createSQLQuery(sql);
 		        q.setCacheable(false);
@@ -38,6 +35,10 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 		        QueryPos qPos = QueryPos.getInstance(q);
 		        qPos.add(roleId);
 		        qPos.add(companyId);
+		        if(isVAlidDates){
+		        	qPos.add(startDate);
+		        	qPos.add(endDate);
+		        }
 		        return (List<ExtUser>) QueryUtil.list(q, getDialect(), start, end);
 		    }
 		    catch (Exception e) {
@@ -61,11 +62,11 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 		 Session session = null;
 		    try {
 		        session = openSession();
-
+		        boolean isVAlidDates = startDate !=null && endDate != null;
 		        String sql = CustomSQLUtil.get(getClass(),
 		        		COUNT_BY_ROLE_COMPANY);
-		        if(startDate !=null && endDate != null){
-		        	sql+= " AND (u.createdate BETWEEN "+startDate + "AND "+ endDate+")";
+		        if(isVAlidDates){
+		        	sql+= " AND (u.modifieddate BETWEEN ?  AND ? )";
 		        }
 		        SQLQuery q = session.createSQLQuery(sql);
 		        q.setCacheable(false);
@@ -73,12 +74,16 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 		        QueryPos qPos = QueryPos.getInstance(q);
 		        qPos.add(roleId);
 		        qPos.add(companyId);
+		        if(isVAlidDates){
+		        	qPos.add(startDate);
+		        	qPos.add(endDate);
+		        }
 		        Iterator<Long> itr = q.iterate();
 		        if (itr.hasNext()) {
 					Object count = itr.next();
 
 					if (count != null) {
-						return ((BigInteger)count).intValue();
+						return ((Integer)count).intValue();
 					}
 				}
 
@@ -101,10 +106,10 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 	}
 
 	public static final String FIND_BY_ROLE_COMPANY =
-			ExtUser.class.getName() +
+			ExtUserFinder.class.getName() +
 		        ".findUsersByCompanyAndRole";
 	public static final String COUNT_BY_ROLE_COMPANY =
-			ExtUser.class.getName() +
+			ExtUserFinder.class.getName() +
 		        ".countUsersByCompanyAndRole";
 	
 }

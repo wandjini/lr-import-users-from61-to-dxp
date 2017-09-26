@@ -636,27 +636,6 @@ public interface ExtUserModel extends BaseModel<ExtUser>, ShardedModel {
 	public void setAgreedToTermsOfUse(boolean agreedToTermsOfUse);
 
 	/**
-	 * Returns the email address verified of this ext user.
-	 *
-	 * @return the email address verified of this ext user
-	 */
-	public boolean getEmailAddressVerified();
-
-	/**
-	 * Returns <code>true</code> if this ext user is email address verified.
-	 *
-	 * @return <code>true</code> if this ext user is email address verified; <code>false</code> otherwise
-	 */
-	public boolean isEmailAddressVerified();
-
-	/**
-	 * Sets whether this ext user is email address verified.
-	 *
-	 * @param emailAddressVerified the email address verified of this ext user
-	 */
-	public void setEmailAddressVerified(boolean emailAddressVerified);
-
-	/**
 	 * Returns the status of this ext user.
 	 *
 	 * @return the status of this ext user
@@ -669,20 +648,6 @@ public interface ExtUserModel extends BaseModel<ExtUser>, ShardedModel {
 	 * @param status the status of this ext user
 	 */
 	public void setStatus(int status);
-
-	/**
-	 * Returns the role ID of this ext user.
-	 *
-	 * @return the role ID of this ext user
-	 */
-	public long getRoleId();
-
-	/**
-	 * Sets the role ID of this ext user.
-	 *
-	 * @param roleId the role ID of this ext user
-	 */
-	public void setRoleId(long roleId);
 
 	@Override
 	public boolean isNew();

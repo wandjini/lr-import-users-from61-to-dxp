@@ -234,6 +234,11 @@ public class ExtRoleLocalServiceUtil {
 		return getService().getExtRolesByCompany(companyId);
 	}
 
+	public static java.util.List<com.liferay.suez.user.synch.model.ExtRole> getExtRolesByCompanyAndName(
+		long companyId, java.lang.String name) {
+		return getService().getExtRolesByCompanyAndName(companyId, name);
+	}
+
 	/**
 	* Returns the number of rows matching the dynamic query.
 	*

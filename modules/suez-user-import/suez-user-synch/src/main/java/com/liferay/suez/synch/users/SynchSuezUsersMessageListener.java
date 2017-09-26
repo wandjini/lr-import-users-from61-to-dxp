@@ -2,6 +2,7 @@ package com.liferay.suez.synch.users;
 
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.suez.synch.users.adapter.ExtUserToUserAdapter;
@@ -71,42 +73,57 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 	@Override
 	protected void doReceive(Message message) throws Exception {
 		try {
+			_log.debug("Start Migration date "+ new Date());
 			SuezMigrationRequest suezMigrationRequest = (SuezMigrationRequest) message.getPayload();
 			int take = _configuration.itemsPerPage();
 			int end = take;
 			int start  = 0;
 			int count = 0;
+			int total = 0;
 			long extCompanyId = suezMigrationRequest.getExtCompanyId();
 			long extRoleId = 0;
 			long newRoleId = 0;
 			List<ExtUser> extUsers = null;
 			
+			_log.debug("Migration request");
+			_log.debug("External Company Id: "+suezMigrationRequest.getExtCompanyId());
+			_log.debug("Destination site Id: "+suezMigrationRequest.getDestinationGroupId());
+			_log.debug("Start Date: "+suezMigrationRequest.getStartDate());
+			_log.debug("End Date: "+suezMigrationRequest.getEndDate());
+			
 			//Just to import at most take users
 			//final version will provide a cycle to get all users
 			Iterator<Long> mapRolesIterator = suezMigrationRequest.getExtRoleNewRoleMap().keySet().iterator();
-			
+			int i = 1;
 			while(mapRolesIterator.hasNext()){
 				extRoleId = mapRolesIterator.next();
 				newRoleId = suezMigrationRequest.getExtRoleNewRoleMap().get(extRoleId);
+				_log.debug("External Role_"+i+": "+extRoleId);
+				_log.debug("Destination Role_"+ i++ +": "+newRoleId);
 				count = _extUserLocalService.countExtUsersByCompanyAndRole(extCompanyId, extRoleId, 
 							suezMigrationRequest.getStartDate(),
 							suezMigrationRequest.getEndDate());
 				
-				do {
+				extUsers = _extUserLocalService.findExtUsersByCompanyAndRole(extCompanyId, extRoleId, 
+						suezMigrationRequest.getStartDate(),
+						suezMigrationRequest.getEndDate(), start, count < end ? count:end);
+				while(extUsers != null && !extUsers.isEmpty() )
+				{
+					
+					total += importUsers(newRoleId, extUsers, suezMigrationRequest);
+				
+					start = end;
+					end+=take;
 					extUsers = _extUserLocalService.findExtUsersByCompanyAndRole(extCompanyId, extRoleId, 
 							suezMigrationRequest.getStartDate(),
 							suezMigrationRequest.getEndDate(), start, count < end ? count:end);
-					if(extUsers != null && !extUsers.isEmpty()){
-						importUsers(newRoleId, extUsers, suezMigrationRequest);
-					}
-					start = end;
-					end+=take;
-				}while(count < end);
-				
+						
+				}
 				
 			}
 			
-			
+			_log.debug("Total new users "+ total);
+			_log.debug("End Migration date "+ new Date());
 		} catch (Exception e) {
 			_log.debug(e);
 		}
@@ -115,34 +132,46 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 
 	/**
 	 * Business method to import user and group/role association
+	 * 
+	 * @return number of users created
+	 * 
 	 * @param newRoleId
 	 * @param extUsers
 	 * @param suezMigrationRequest
 	 * @throws PortalException
 	 * @throws ParseException
 	 */
-	private void importUsers(long newRoleId, final List<ExtUser> extUsers, SuezMigrationRequest suezMigrationRequest ) 
+	private int  importUsers(long newRoleId, final List<ExtUser> extUsers, SuezMigrationRequest suezMigrationRequest ) 
 			throws PortalException, ParseException{
 		
-		long[] userIds = null;
 		long[] groupIds = null;
 		User user = null;
-		
+		int total = 0;
 		ServiceContext serviceContext = suezMigrationRequest.getServiceContext() ;
 
-		_log.info("Found ["+extUsers.size()+"] users");
+		_log.debug("Found ["+extUsers.size()+"] users");
 		ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
 		for(ExtUser extUser : extUsers){
-			user =_userLocalService.fetchUserByEmailAddress(suezMigrationRequest.getExtCompanyId(), extUser.getEmailAddress());
+			user =_userLocalService.fetchUserByEmailAddress(serviceContext.getCompanyId(), extUser.getEmailAddress());
 			if(user == null){
 				//addUser(companyId, creatorUserId, extUser);
 				userAdapter.setExtUser(extUser);
-				user = _userLocalService.addUser(
-						userAdapter.adaptExternalUsertoUser(new long[]{suezMigrationRequest.getDestinationGroupId()},
-								new long[]{newRoleId}, serviceContext));
+				try {
+					user = 
+							userAdapter.adaptExternalUsertoUser(new long[]{suezMigrationRequest.getDestinationGroupId()},
+									new long[]{newRoleId}, serviceContext);
+					
+					_userGroupRoleLocalService.addUserGroupRoles(user.getUserId(),suezMigrationRequest.getDestinationGroupId(), new long[]{newRoleId});
+					_userLocalService.addGroupUser(suezMigrationRequest.getDestinationGroupId(), user.getUserId());
+					total +=1;
+				} catch (Exception e) {
+					_log.debug("Error importing user: "+extUser.getEmailAddress());
+					_log.debug(e);
+				}
 				
-				_roleLocalService.addUserRole(user.getUserId(), newRoleId);
-				_userLocalService.addGroupUser(suezMigrationRequest.getDestinationGroupId(), user.getUserId());
+			}
+			else if(extUser.isDefaultUser()){
+				_log.debug("External user: "+user.getEmailAddress()+" is default user and can't be migrated");
 			}
 			else{
 				//Associate user to destination group with new role
@@ -152,18 +181,23 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 					
 					_groupLocalService.addUserGroup(user.getUserId(), suezMigrationRequest.getDestinationGroupId());
 					userAdapter.reindex(user);
+					_log.debug("Associated existing user: "+user.getEmailAddress()+" to groupId "+suezMigrationRequest.getDestinationGroupId());
+					
 				}
 				
-				userIds = _roleLocalService.getUserPrimaryKeys(newRoleId);
-				if( userIds != null && 
-						!ArrayUtil.contains(userIds, user.getUserId())){
-					_userLocalService.addRoleUser(newRoleId, user);
+
+				if( !_userGroupRoleLocalService.hasUserGroupRole(user.getUserId(),
+						suezMigrationRequest.getDestinationGroupId(), newRoleId))
+				{
+					
+					_userGroupRoleLocalService.addUserGroupRoles(user.getUserId(),suezMigrationRequest.getDestinationGroupId(), new long[]{newRoleId});
 					userAdapter.reindex(user);
+					_log.debug("Associated existing user: "+user.getEmailAddress()+" to roleId "+newRoleId);
 				}
 			}
 			
 		}
-		
+		return total;
 	}
 	
 	@Modified
@@ -244,6 +278,12 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 	
 	protected GroupLocalService _groupLocalService;
 	
+	@Reference(unbind = "-")
+	protected void setUserGroupRoleLocalService(
+			UserGroupRoleLocalService userGroupRoleLocalService) {
+		_userGroupRoleLocalService = userGroupRoleLocalService;
+	}
+	protected UserGroupRoleLocalService _userGroupRoleLocalService;
 	
 	private volatile SynchSuezUsersConfiguration _configuration;
 	

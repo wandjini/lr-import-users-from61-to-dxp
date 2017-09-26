@@ -65,7 +65,6 @@ public class ExtCompanyWrapper implements ExtCompany, ModelWrapper<ExtCompany> {
 		attributes.put("logoId", getLogoId());
 		attributes.put("system", getSystem());
 		attributes.put("maxUsers", getMaxUsers());
-		attributes.put("active", getActive());
 
 		return attributes;
 	}
@@ -125,12 +124,6 @@ public class ExtCompanyWrapper implements ExtCompany, ModelWrapper<ExtCompany> {
 		if (maxUsers != null) {
 			setMaxUsers(maxUsers);
 		}
-
-		Boolean active = (Boolean)attributes.get("active");
-
-		if (active != null) {
-			setActive(active);
-		}
 	}
 
 	@Override
@@ -144,16 +137,6 @@ public class ExtCompanyWrapper implements ExtCompany, ModelWrapper<ExtCompany> {
 	}
 
 	/**
-	* Returns the active of this ext company.
-	*
-	* @return the active of this ext company
-	*/
-	@Override
-	public boolean getActive() {
-		return _extCompany.getActive();
-	}
-
-	/**
 	* Returns the system of this ext company.
 	*
 	* @return the system of this ext company
@@ -161,16 +144,6 @@ public class ExtCompanyWrapper implements ExtCompany, ModelWrapper<ExtCompany> {
 	@Override
 	public boolean getSystem() {
 		return _extCompany.getSystem();
-	}
-
-	/**
-	* Returns <code>true</code> if this ext company is active.
-	*
-	* @return <code>true</code> if this ext company is active; <code>false</code> otherwise
-	*/
-	@Override
-	public boolean isActive() {
-		return _extCompany.isActive();
 	}
 
 	@Override
@@ -341,16 +314,6 @@ public class ExtCompanyWrapper implements ExtCompany, ModelWrapper<ExtCompany> {
 	@Override
 	public void setAccountId(long accountId) {
 		_extCompany.setAccountId(accountId);
-	}
-
-	/**
-	* Sets whether this ext company is active.
-	*
-	* @param active the active of this ext company
-	*/
-	@Override
-	public void setActive(boolean active) {
-		_extCompany.setActive(active);
 	}
 
 	@Override
