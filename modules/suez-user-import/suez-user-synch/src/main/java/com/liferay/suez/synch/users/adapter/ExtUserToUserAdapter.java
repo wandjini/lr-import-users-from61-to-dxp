@@ -80,7 +80,8 @@ public class ExtUserToUserAdapter {
 		
 		long companyId = serviceContext.getCompanyId();
 		long creatorUserId = serviceContext.getUserId();
-		User user = _userLocalService.createUser(_counterLocalService.increment());
+		String destinationGroupId = !ArrayUtil.isEmpty(groupIds) ? String.valueOf(groupIds[0]) : StringPool.BLANK;
+		User user = userLocService.createUser(counterLoService.increment());
 		user.setAgreedToTermsOfUse(this.extUser.getAgreedToTermsOfUse());
 		user.setPasswordEncrypted(this.extUser.getPasswordEncrypted());
 		user.setPassword(this.extUser.getPassword());
@@ -92,33 +93,18 @@ public class ExtUserToUserAdapter {
 		user.setLastLoginDate(this.extUser.getLastLoginDate());
 		user.setLastLoginIP(this.extUser.getLastLoginIP());
 		user.setLastFailedLoginDate(this.extUser.getLastFailedLoginDate());
-		//user.setEmailAddressVerified(this.extUser.getEmailAddressVerified());
 		
-		Company company = _companyLocalService.fetchCompany(companyId);
-		
-		
+		Company company = companyLocService.fetchCompany(companyId);
 		// PLACEHOLDER 01
-		
-				
-		User defltUser = _userLocalService.getDefaultUser(companyId);
-
-		
-
-
+		User defltUser = userLocService.getDefaultUser(companyId);
 		user.setDefaultUser(this.extUser.getDefaultUser() );
-		user.setContactId(_counterLocalService.increment());
-
+		user.setContactId(counterLoService.increment());
 		user.setPasswordReset(this.extUser.getPasswordReset());
-		
-
 		user.setDigest(this.extUser.getDigest());
-		user.setScreenName(this.extUser.getScreenName());
-		user.setEmailAddress(this.extUser.getEmailAddress());
+		user.setScreenName(this.extUser.getScreenName()+"#"+destinationGroupId);
+		user.setEmailAddress(destinationGroupId+"#"+this.extUser.getEmailAddress());
 		user.setFacebookId(this.extUser.getFacebookId());
-
 		user.setLdapServerId(-1);
-		
-
 		user.setOpenId(this.extUser.getOpenId());
 		user.setLanguageId(this.extUser.getLanguageId());
 		user.setTimeZoneId(this.extUser.getTimeZoneId());
@@ -128,21 +114,11 @@ public class ExtUserToUserAdapter {
 		user.setLastName(this.extUser.getLastName());
 		user.setJobTitle(this.extUser.getJobTitle());
 		user.setStatus(this.extUser.getStatus());
-		//user.setExpandoBridgeAttributes(null);
-
-		user = _userLocalService.updateUser(user);
-
+		user = userLocService.updateUser(user);
 		// Contact
-
 		String creatorUserName = StringPool.BLANK;
-
 		if (creatorUserId <= 0) {
 			creatorUserId = user.getUserId();
-
-			// Don't grab the full name from the User object because it doesn't
-			// have a corresponding Contact object yet
-
-			//creatorUserName = user.getFullName();
 		}
 		else {
 			User creatorUser = UserLocalServiceUtil.fetchUser(creatorUserId);
@@ -150,10 +126,7 @@ public class ExtUserToUserAdapter {
 				creatorUserName = creatorUser.getFullName();
 		}
 
-		//Date birthday = getBirthday(birthdayMonth, birthdayDay, birthdayYear);
-
 		Contact contact = ContactLocalServiceUtil.createContact(user.getContactId());
-
 		contact.setCompanyId(user.getCompanyId());
 		contact.setUserId(creatorUserId);
 		contact.setUserName(creatorUserName);
@@ -165,17 +138,12 @@ public class ExtUserToUserAdapter {
 		contact.setFirstName(this.extUser.getFirstName());
 		contact.setMiddleName(this.extUser.getMiddleName());
 		contact.setLastName(this.extUser.getLastName());
-		//contact.setPrefixId(prefixId);
-		//contact.setSuffixId(suffixId);
-		//contact.setMale(male);
 		contact.setBirthday(DateUtil.parseDate("ddMMyyyy", "0101970", serviceContext.getLocale()));
 		contact.setJobTitle(this.extUser.getJobTitle());
-
-		_contactLocalService.updateContact(contact);
-
+		contactLocService.updateContact(contact);
 		// Group
 
-		_groupLocalService.addGroup(
+		groupLocService.addGroup(
 			user.getUserId(), GroupConstants.DEFAULT_PARENT_GROUP_ID,
 			User.class.getName(), user.getUserId(),
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, (Map<Locale, String>)null,
@@ -188,63 +156,32 @@ public class ExtUserToUserAdapter {
 			List<Group> groups = new ArrayList<>();
 
 			for (long groupId : groupIds) {
-				Group group = _groupLocalService.fetchGroup(groupId);
+				Group group = groupLocService.fetchGroup(groupId);
 
 				if (group != null) {
 					groups.add(group);
 				}
-				else {
-					if (_log.isWarnEnabled()) {
-						_log.warn("Group " + groupId + " does not exist");
-					}
-				}
+				
 			}
-
-			_groupLocalService.addUserGroups(user.getUserId(), groups);
+			groupLocService.addUserGroups(user.getUserId(), groups);
 		}
 
-		_userLocalService.addDefaultGroups(user.getUserId());
-
-		// Organizations
-
-		//updateOrganizations(userId, organizationIds, false);
-
+		userLocService.addDefaultGroups(user.getUserId());
 		// Roles
 		
 		if (roleIds != null) {
-			roleIds = UsersAdminUtil.addRequiredRoles(user, roleIds);
+			UsersAdminUtil.addRequiredRoles(user, roleIds);
 
-			//_roleLocalService.setUserRoles(user.getUserId(), roleIds);
 			
 		}
 		
-		_userLocalService.addDefaultRoles(user.getUserId());
-
-		// User groups
-
-		/*
-		if (userGroupIds != null) {
-			if (PropsValues.USER_GROUPS_COPY_LAYOUTS_TO_USER_PERSONAL_SITE) {
-				for (long userGroupId : userGroupIds) {
-					userGroupLocalService.copyUserGroupLayouts(
-						userGroupId, new long[] {userId});
-				}
-			}
-
-			userPersistence.setUserGroups(userId, userGroupIds);
-		}
-		 */
-		//_userLocalService.addDefaultUserGroups(user.getUserId());
-
+		userLocService.addDefaultRoles(user.getUserId());
 		// Resources
 
-		_resourceLocalService.addResources(
+		resourceLocService.addResources(
 			companyId, 0, creatorUserId, User.class.getName(), user.getUserId(),
 			false, false, false);
 		
-		// Asset
-
-
 		// Indexer
 
 		reindex(user);
@@ -260,14 +197,12 @@ public class ExtUserToUserAdapter {
 			ServiceContext	workflowServiceContext = new ServiceContext();
 	
 			workflowServiceContext.setAttribute("autoPassword", false);
-			//workflowServiceContext.setAttribute("passwordUnencrypted", password1);
 			workflowServiceContext.setAttribute("sendEmail", null);
 	
 			WorkflowHandlerRegistryUtil.startWorkflowInstance(
 				companyId, workflowUserId, User.class.getName(), user.getUserId(), user,
 				workflowServiceContext);
 		 
-		
 		return user;
 	}
 
@@ -287,51 +222,24 @@ public class ExtUserToUserAdapter {
 		this.extUser = externalUser;
 	}
 
-	@Reference
-	public void setUserLocalService(UserLocalService userLocalService){
-		_userLocalService = userLocalService;
-	}
-	protected static UserLocalService _userLocalService;
-	
-	@Reference
-	public void setCounterLocalService(CounterLocalService counterLocalService){
-		_counterLocalService = counterLocalService;
-	}
-	protected static CounterLocalService _counterLocalService;
-	
-	@Reference
-	public void setCompanyLocalService(CompanyLocalService companyLocalService){
-		_companyLocalService = companyLocalService;
-	}
-	protected static CompanyLocalService _companyLocalService;
-	
-	@Reference
-	public void setContactLocalService(ContactLocalService contactLocalService){
-		_contactLocalService = contactLocalService;
-	}
-	protected static ContactLocalService _contactLocalService;
-	
-	@Reference
-	public void setGroupLocalService(GroupLocalService groupLocalService){
-		_groupLocalService = groupLocalService;
-	}
-	protected static GroupLocalService _groupLocalService;
-	
-	@Reference
-	public void resourceLocalService(ResourceLocalService resourceLocalService){
-		_resourceLocalService = resourceLocalService;
-	}
-	
-	protected static ResourceLocalService _resourceLocalService;
-
 	@Reference(unbind = "-")
-	protected void setRoleLocalService(
-			RoleLocalService roleLocalService) {
-		_roleLocalService = roleLocalService;
-	}
+	protected static UserLocalService userLocService;
 	
-	protected RoleLocalService _roleLocalService;
+	@Reference(unbind = "-")
+	protected static CounterLocalService counterLoService;
 	
+	@Reference(unbind = "-")
+	protected static CompanyLocalService companyLocService;
+	
+	@Reference(unbind = "-")
+	protected static ContactLocalService contactLocService;
+	
+	@Reference(unbind = "-")
+	protected static GroupLocalService groupLocService;
+	
+	@Reference(unbind = "-")
+	protected static ResourceLocalService resourceLocService;
+
 	public void reindex(User user) throws SearchException {
 		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);

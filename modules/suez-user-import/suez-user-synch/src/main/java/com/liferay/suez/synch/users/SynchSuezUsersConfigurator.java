@@ -35,27 +35,27 @@ public class SynchSuezUsersConfigurator {
 				DestinationConfiguration.DESTINATION_TYPE_PARALLEL, 
 				SynchSuezUsersKeys.DESTINATION_NAME); 
 		destinationConfiguration.setMaximumQueueSize(50);
-		_destination = _destinationFactory.createDestination(destinationConfiguration);
+		destination = destinationFactory.createDestination(destinationConfiguration);
 		Dictionary<String, Object> properties = new HashMapDictionary<>();
-		properties.put("destination.name", _destination.getName());
+		properties.put("destination.name", destination.getName());
 		ServiceRegistration<Destination> serviceRegistration = bundleContext.registerService
-				(Destination.class, _destination, properties);
-		_serviceRegistrations.put(_destination.getName(), serviceRegistration);
+				(Destination.class, destination, properties);
+		servicRegistrations.put(destination.getName(), serviceRegistration);
 	}
 	
 	@Deactivate
 	protected void deactivate() {
 		ServiceRegistration<Destination> serviceRegistration =
-				_serviceRegistrations.remove(_destination.getName());
+				servicRegistrations.remove(destination.getName());
 
 			serviceRegistration.unregister();
 	}
 	
 	@Reference
-	protected DestinationFactory _destinationFactory;
+	protected DestinationFactory destinationFactory;
 	
 	private final Map<String, ServiceRegistration<Destination>>
-	 	_serviceRegistrations = new ConcurrentHashMap<>();
+	 	servicRegistrations = new ConcurrentHashMap<>();
 	
-	private Destination _destination;
+	private Destination destination;
 }

@@ -29,14 +29,14 @@
 	long destinationGroupId = (long) renderRequest.getAttribute("destinationGroupId");
 	long extCompanyId = (long) renderRequest.getAttribute("extCompanyId");
 	int extRolesSize = extRoles != null ? extRoles.size():0;
-	long extRoleId_1 = ParamUtil.getLong(renderRequest, "extRoleId_1");
-	long extRoleId_2 = ParamUtil.getLong(renderRequest, "extRoleId_2");
-	long extRoleId_3 = ParamUtil.getLong(renderRequest, "extRoleId_3");
-	long extRoleId_4 = ParamUtil.getLong(renderRequest, "extRoleId_4");
-	long destRoleId_1 = ParamUtil.getLong(renderRequest, "destRoleId_1");
-	long destRoleId_2 = ParamUtil.getLong(renderRequest, "destRoleId_2");
-	long destRoleId_3 = ParamUtil.getLong(renderRequest, "destRoleId_3");
-	long destRoleId_4 = ParamUtil.getLong(renderRequest, "destRoleId_4");
+	long extRoleId1 = ParamUtil.getLong(renderRequest, "extRoleId1");
+	long extRoleId2 = ParamUtil.getLong(renderRequest, "extRoleId2");
+	long extRoleId3 = ParamUtil.getLong(renderRequest, "extRoleId3");
+	long extRoleId4 = ParamUtil.getLong(renderRequest, "extRoleId4");
+	long destRoleId1 = ParamUtil.getLong(renderRequest, "destRoleId1");
+	long destRoleId2 = ParamUtil.getLong(renderRequest, "destRoleId2");
+	long destRoleId3 = ParamUtil.getLong(renderRequest, "destRoleId3");
+	long destRoleId4 = ParamUtil.getLong(renderRequest, "destRoleId4");
 	
 %>
 <portlet:renderURL var="importPortletUrl">
@@ -79,21 +79,21 @@
 		</aui:row>
 		<aui:row>
 			<aui:col width="50">
-				<aui:select name="extRoleId_1" label="ext-role-1">
+				<aui:select name="extRoleId1" label="ext-role-1">
 					<option  value="" disabled selected ><liferay-ui:message key="select"/></option>
 					<%if(extRoles != null && !extRoles.isEmpty()){ %>
 						<%for(ExtRole extRole:extRoles){ %>
-							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId_1 %>"><%=extRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId1 %>"><%=extRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
 			</aui:col>
 			<aui:col width="50">
-				<aui:select name="destRoleId_1" label="dest-role-1">
+				<aui:select name="destRoleId1" label="dest-role-1">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(newRoles != null && !newRoles.isEmpty()) {%>
 						<%for(Role newRole:newRoles){ %>
-							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId_1 %>"><%=newRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId1 %>"><%=newRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
@@ -101,21 +101,21 @@
 		</aui:row>
 		<aui:row>
 			<aui:col width="50">
-				<aui:select name="extRoleId_2" label="ext-role-2">
+				<aui:select name="extRoleId2" label="ext-role-2">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 1) {%>
 						<%for(ExtRole extRole:extRoles){ %>
-							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId_2 %>"><%=extRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId2 %>"><%=extRole.getName() %></aui:option>
 						<%} %>
 					<%}%>				
 				</aui:select>
 			</aui:col>
 			<aui:col width="50">
-				<aui:select name="destRoleId_2" label="dest-role-2">
+				<aui:select name="destRoleId2" label="dest-role-2">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 1) {%>
 						<%for(Role newRole:newRoles){ %>
-							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId_2 %>"><%=newRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId2 %>"><%=newRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
@@ -123,21 +123,21 @@
 		</aui:row>
 		<aui:row>
 			<aui:col width="50">
-				<aui:select name="extRoleId_3" label="ext-role-3">
+				<aui:select name="extRoleId3" label="ext-role-3">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 2) {%>
 						<%for(ExtRole extRole:extRoles){ %>
-							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId_3 %>"><%=extRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId3 %>"><%=extRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
 			</aui:col>
 			<aui:col width="50">
-				<aui:select name="destRoleId_3" label="dest-role-3">
+				<aui:select name="destRoleId3" label="dest-role-3">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 2) {%>
 						<%for(Role newRole:newRoles){ %>
-							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId_3 %>"><%=newRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId3 %>"><%=newRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
@@ -145,21 +145,21 @@
 		</aui:row>
 		<aui:row>
 			<aui:col width="50">
-				<aui:select name="extRoleId_4" label="ext-role-4">
+				<aui:select name="extRoleId4" label="ext-role-4">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 3) {%>
 						<%for(ExtRole extRole:extRoles){ %>
-							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId_4 %>"><%=extRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(extRole.getRoleId()) %>" selected ="<%=extRole.getRoleId() == extRoleId4 %>"><%=extRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
 			</aui:col>
 			<aui:col width="50">
-				<aui:select name="destRoleId_4" label="dest-role-4">
+				<aui:select name="destRoleId4" label="dest-role-4">
 					<option  value="" selected disabled><liferay-ui:message key="select"/></option>
 					<%if(extRolesSize > 3) {%>
 						<%for(Role newRole:newRoles){ %>
-							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId_4 %>"><%=newRole.getName() %></aui:option>
+							<aui:option  value="<%=String.valueOf(newRole.getRoleId()) %>" selected ="<%=newRole.getRoleId() == destRoleId4 %>"><%=newRole.getName() %></aui:option>
 						<%} %>
 					<%}%>
 				</aui:select>
@@ -172,7 +172,7 @@
 						<liferay-ui:message key="from" />
 					</label>
 					<liferay-ui:input-date
-						dayParam='<%= "f_day" %>'
+						dayParam='<%= "fday" %>'
 						dayValue="<%= fromDay %>"
 						disabled="<%= false %>"
 						firstDayOfWeek="<%= from.getFirstDayOfWeek() - 1 %>"

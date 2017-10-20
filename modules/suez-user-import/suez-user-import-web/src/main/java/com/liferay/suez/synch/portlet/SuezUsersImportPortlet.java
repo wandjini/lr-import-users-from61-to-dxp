@@ -19,6 +19,8 @@ import org.osgi.service.component.annotations.Reference;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -70,21 +72,20 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 			List<Role> newRoles = null;
 			
 			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			long extCompanyId = ParamUtil.getLong(renderRequest, "extCompanyId");
-			long destinationGroupId = ParamUtil.getLong(renderRequest, "destinationGroupId");
-			extCompanies = _extCompanyLocalService.getExtCompanies(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			long extCompanyId = ParamUtil.getLong(renderRequest, EXT_COMPANY_ID);
+			long destinationGroupId = ParamUtil.getLong(renderRequest, DESTINATION_GROUP_ID);
+			extCompanies = extCompanyLocService.getExtCompanies(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 			if(extCompanyId > 0){
-				extRoles = _extRoleLocalService.getExtRolesByCompanyAndName(extCompanyId, "OVS");
+				extRoles = extRoleLocService.getExtRolesByCompanyAndName(extCompanyId, "OVS");
 				
 				
 			}
 			if(destinationGroupId > 0){
-				newRoles = _roleLocalService.getGroupRelatedRoles(destinationGroupId);
+				newRoles = roleLocService.getGroupRelatedRoles(destinationGroupId);
 			}
 			Company company = themeDisplay.getCompany();
-			List<Group> allGroups = _groupLocalService.getActiveGroups(company.getCompanyId(), true);
+			List<Group> allGroups = groupLocService.getActiveGroups(company.getCompanyId(), true);
 			if(allGroups != null && !allGroups.isEmpty()){
-				//Stream<Group> streamGroup = allGroups.stream().filter(group -> (group.isSite() && !group.isUserPersonalSite()));
 				sites = new ArrayList<>();
 				for(Group group : allGroups){
 					if(!group.isUser() && group.isSite())
@@ -96,11 +97,11 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 			renderRequest.setAttribute("ExtRoles", extRoles);
 			renderRequest.setAttribute("NewRoles", newRoles);
 			renderRequest.setAttribute("Sites", sites);
-			renderRequest.setAttribute("extCompanyId", extCompanyId);
-			renderRequest.setAttribute("destinationGroupId", destinationGroupId);
+			renderRequest.setAttribute(EXT_COMPANY_ID, extCompanyId);
+			renderRequest.setAttribute(DESTINATION_GROUP_ID, destinationGroupId);
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			log.debug(e);
 		}
 		super.doView(renderRequest, renderResponse);
 	}
@@ -137,25 +138,25 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 		suezMigrationRequest.setDestinationGroupId(ParamUtil.getLong(actionRequest, "destinationGroupId"));
 		suezMigrationRequest.setExtCompanyId(ParamUtil.getLong(actionRequest, "extCompanyId"));
 		suezMigrationRequest.setServiceContext(ServiceContextFactory.getInstance(actionRequest));
-		Long extRoleId_1 = ParamUtil.getLong(actionRequest, "extRoleId_1");
-		Long extRoleId_2 = ParamUtil.getLong(actionRequest, "extRoleId_2");
-		Long extRoleId_3 = ParamUtil.getLong(actionRequest, "extRoleId_3");
-		Long extRoleId_4 = ParamUtil.getLong(actionRequest, "extRoleId_4");
-		Long destRoleId_1 = ParamUtil.getLong(actionRequest, "destRoleId_1");
-		Long destRoleId_2 = ParamUtil.getLong(actionRequest, "destRoleId_2");
-		Long destRoleId_3 = ParamUtil.getLong(actionRequest, "destRoleId_3");
-		Long destRoleId_4 = ParamUtil.getLong(actionRequest, "destRoleId_4");
+		Long extRoleId1 = ParamUtil.getLong(actionRequest, "extRoleId1");
+		Long extRoleId2 = ParamUtil.getLong(actionRequest, "extRoleId2");
+		Long extRoleId3 = ParamUtil.getLong(actionRequest, "extRoleId3");
+		Long extRoleId4 = ParamUtil.getLong(actionRequest, "extRoleId4");
+		Long destRoleId1 = ParamUtil.getLong(actionRequest, "destRoleId1");
+		Long destRoleId2 = ParamUtil.getLong(actionRequest, "destRoleId2");
+		Long destRoleId3 = ParamUtil.getLong(actionRequest, "destRoleId3");
+		Long destRoleId4 = ParamUtil.getLong(actionRequest, "destRoleId4");
 		Map<Long, Long> extRoleNewRoleMap = new HashMap<>();
 		int extRolesSize  = ParamUtil.getInteger(actionRequest, "extRolesSize");
 		
-		if(extRoleId_1 > 0)
-			extRoleNewRoleMap.put(extRoleId_1, destRoleId_1);
+		if(extRoleId1 > 0)
+			extRoleNewRoleMap.put(extRoleId1, destRoleId1);
 		if(extRolesSize > 1)
-			extRoleNewRoleMap.put(extRoleId_2, destRoleId_2);
+			extRoleNewRoleMap.put(extRoleId2, destRoleId2);
 		if(extRolesSize > 2)
-			extRoleNewRoleMap.put(extRoleId_3, destRoleId_3);
+			extRoleNewRoleMap.put(extRoleId3, destRoleId3);
 		if(extRolesSize > 3)
-			extRoleNewRoleMap.put(extRoleId_4, destRoleId_4);
+			extRoleNewRoleMap.put(extRoleId4, destRoleId4);
 		suezMigrationRequest.setExtRoleNewRoleMap(extRoleNewRoleMap);
 		
 		int fDay = ParamUtil.getInteger(actionRequest, "f_day");
@@ -180,30 +181,34 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 	
 	@Reference
 	public void setGroupLocalService(GroupLocalService groupLocalService){
-		_groupLocalService = groupLocalService;
+		groupLocService = groupLocalService;
 	}
-	private GroupLocalService _groupLocalService;
+	private GroupLocalService groupLocService;
 	
 	@Reference
 	public void setRoleLocalService(RoleLocalService roleLocalService){
-		_roleLocalService = roleLocalService;
+		roleLocService = roleLocalService;
 	}
-	private RoleLocalService _roleLocalService;
+	private RoleLocalService roleLocService;
 	
 	@Reference(unbind = "-")
 	protected void setExtCompanyLocalService(
 			ExtCompanyLocalService extCompanyLocalService) {
-		_extCompanyLocalService = extCompanyLocalService;
+		extCompanyLocService = extCompanyLocalService;
 	}
 	
-	protected ExtCompanyLocalService _extCompanyLocalService;
+	protected ExtCompanyLocalService extCompanyLocService;
 	
 	@Reference(unbind = "-")
 	protected void setExtRoleLocalService(
 			ExtRoleLocalService extRoleLocalService) {
-		_extRoleLocalService = extRoleLocalService;
+		extRoleLocService = extRoleLocalService;
 	}
 	
-	protected ExtRoleLocalService _extRoleLocalService;
+	protected ExtRoleLocalService extRoleLocService;
+	
+	private static Log log = LogFactoryUtil.getLog(SuezUsersImportPortlet.class);
+	private static final String DESTINATION_GROUP_ID = "destinationGroupId";
+	private static final String EXT_COMPANY_ID = "extCompanyId";
 	
 }

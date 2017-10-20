@@ -12,12 +12,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
  */
 public class SuezMigrationRequest {
 
-	/**
-	 * Default constructor
-	 */
-	public SuezMigrationRequest() {
-		
-	}
+	
 	
 	/**
 	 * get servicecontext

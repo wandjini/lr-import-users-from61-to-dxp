@@ -1,22 +1,19 @@
 package com.liferay.suez.synch.users.adapter;
 
-import java.text.ParseException;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
-import com.liferay.portal.kernel.service.CompanyLocalService;
-import com.liferay.portal.kernel.service.ContactLocalService;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -55,20 +52,20 @@ public class ExtRoleAdapter {
 	 * @return
 	 */
 	public final Role adaptExternalRoletoRole(ServiceContext serviceContext) 
-			throws PortalException, ParseException {
+			throws PortalException {
 				
 		try {
 			
-			long roleId = _counterLocalService.increment();
-			long classNameId = _classNameLocalService.getClassNameId(this.extRole.getClassName());
-			Role role = _roleLocalService.createRole(roleId);
+			long roleId = counterLocService.increment();
+			long classNameId = classNameLocService.getClassNameId(this.extRole.getClassName());
+			Role role = roleLocService.createRole(roleId);
 			role.setClassName(this.extRole.getClassName());
 			role.setClassNameId(classNameId);
 			role.setClassPK(roleId);
 			if (serviceContext != null) {
 				role.setUuid(serviceContext.getUuid());
 			}
-			User user = _userLocalService.getUser(serviceContext.getUserId());
+			User user = userLocService.getUser(serviceContext.getUserId());
 			role.setCompanyId(serviceContext.getCompanyId());
 			role.setUserId(serviceContext.getUserId());
 			role.setUserName(user.getFullName());
@@ -80,7 +77,7 @@ public class ExtRoleAdapter {
 			role.setSubtype(this.extRole.getSubtype());
 			role.setExpandoBridgeAttributes(serviceContext);
 
-			role = _roleLocalService.updateRole(role);
+			role = roleLocService.updateRole(role);
 			
 			// Resources
 
@@ -90,12 +87,12 @@ public class ExtRoleAdapter {
 				ownerId = 0;
 			}
 
-			_resourceLocalService.addResources(
+			resourceLocService.addResources(
 				user.getCompanyId(), 0, ownerId, Role.class.getName(),
 				role.getRoleId(), false, false, false);
 
 			if (!user.isDefaultUser()) {
-				_resourceLocalService.addResources(
+				resourceLocService.addResources(
 					user.getCompanyId(), 0, user.getUserId(), Role.class.getName(),
 					role.getRoleId(), false, false, false);
 
@@ -106,7 +103,7 @@ public class ExtRoleAdapter {
 
 			return role;
 		} catch (Exception e) {
-			// TODO: handle exception
+			log.debug(e);
 		}
 				
 		return null;
@@ -116,40 +113,24 @@ public class ExtRoleAdapter {
 	
 	
 	@Reference
-	public void setCounterLocalService(CounterLocalService counterLocalService){
-		_counterLocalService = counterLocalService;
-	}
-	protected static CounterLocalService _counterLocalService;
-	
-	protected static GroupLocalService _groupLocalService;
-	
+	protected static CounterLocalService counterLocService;
 	@Reference
-	public void resourceLocalService(ResourceLocalService resourceLocalService){
-		_resourceLocalService = resourceLocalService;
-	}
-	protected static ResourceLocalService _resourceLocalService;
+	protected static ResourceLocalService resourceLocService;
 
 	@Reference
-	public void setRoleLocalService(RoleLocalService roleLocalService){
-		_roleLocalService = roleLocalService;
-	}
-	protected static RoleLocalService _roleLocalService;
+	protected static RoleLocalService roleLocService;
 	
 	@Reference
-	public void setClassNameleLocalService(ClassNameLocalService classNameLocalService){
-		_classNameLocalService = classNameLocalService;
-	}
-	protected static ClassNameLocalService _classNameLocalService;
+	protected static ClassNameLocalService classNameLocService;
 	
 	@Reference
-	public void setUserLocalService(UserLocalService userLocalService){
-		_userLocalService = userLocalService;
-	}
-	protected static UserLocalService _userLocalService;
+	protected static UserLocalService userLocService;
 	
 	protected void reindex(User user) throws SearchException {
 		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);
 		indexer.reindex(user);
 	}
+	private static final Log log = LogFactoryUtil.getLog(
+			ExtRoleAdapter.class);
 }

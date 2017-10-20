@@ -14,8 +14,26 @@ import com.liferay.suez.user.synch.model.ExtUser;
 import com.liferay.suez.user.synch.model.impl.ExtUserImpl;
 import com.liferay.suez.user.synch.service.persistence.ExtUserFinder;
 
+/**
+ * 
+ * Finder used to retrieve user to import to the new database portal
+ * @author guy
+ *
+ */
 public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUserFinder{
 	
+	/**
+	 * 
+	 * This method retrieves users from an external database
+	 * 
+	 * @param companyId
+	 * @param roleId
+	 * @param startDate
+	 * @param endDate
+	 * @param start
+	 * @param end
+	 * @return list of users
+	 */
 	public List<ExtUser> findUsersByCompanyAndRole(long companyId, long roleId, 
 			Date startDate, Date endDate, int start, int end ){
 		 Session session = null;
@@ -56,6 +74,17 @@ public class ExtUserFinderImpl extends ExtUserFinderBaseImpl  implements ExtUser
 		    return null;
 		
 	}
+	
+	/**
+	 * 
+	 * This method retrieves users number usefull for pagination
+	 * 
+	 * @param companyId
+	 * @param roleId
+	 * @param startDate
+	 * @param endDate
+	 * @return list of users
+	 */
 	
 	public int countUsersByCompanyAndRole(long companyId, long roleId,
 			Date startDate, Date endDate){

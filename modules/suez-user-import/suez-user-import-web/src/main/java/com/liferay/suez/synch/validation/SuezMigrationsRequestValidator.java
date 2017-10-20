@@ -12,7 +12,10 @@ import com.liferay.suez.synch.users.util.SuezMigrationRequest;
  */
 public class SuezMigrationsRequestValidator {
 
-public static boolean isSuezMigrationRequestValid(SuezMigrationRequest  suezMigrationRequest, int extRolesSize, List<String> errors){
+	private SuezMigrationsRequestValidator(){
+		throw new IllegalAccessError();
+	}
+	public static boolean isSuezMigrationRequestValid(SuezMigrationRequest  suezMigrationRequest, int extRolesSize, List<String> errors){
 		boolean result = true;
 		
 		if(suezMigrationRequest.getExtCompanyId() <=0){

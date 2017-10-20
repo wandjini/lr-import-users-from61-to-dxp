@@ -40,6 +40,7 @@ public class ExtCompanyLocalServiceImpl extends ExtCompanyLocalServiceBaseImpl {
 	 *
 	 * Never reference this class directly. Always use {@link com.liferay.suez.user.synch.service.ExtCompanyLocalServiceUtil} to access the ext company local service.
 	 */
+	@Override
 	public ExtCompany getExtCompany(long companyId){
 		return extCompanyPersistence.fetchByPrimaryKey(companyId);
 	}

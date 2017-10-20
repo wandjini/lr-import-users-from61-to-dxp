@@ -15,7 +15,7 @@
     The following beans define a new liferayDataSource based on the jdbc.ext. prefix in portal-ext.properties.
    -->
   <bean class="com.liferay.portal.dao.jdbc.spring.DataSourceFactoryBean" id="liferayDataSourceImpl">
-    <property name="propertyPrefix" value="jdbc.ext." />
+    <property name="propertyPrefix" value="jdbc.external." />
   </bean>
 
   <bean class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy" id="liferayDataSource">
