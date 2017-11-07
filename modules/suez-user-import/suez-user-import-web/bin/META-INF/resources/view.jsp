@@ -172,7 +172,7 @@
 						<liferay-ui:message key="from" />
 					</label>
 					<liferay-ui:input-date
-						dayParam='<%= "fday" %>'
+						dayParam='<%= "f_day" %>'
 						dayValue="<%= fromDay %>"
 						disabled="<%= false %>"
 						firstDayOfWeek="<%= from.getFirstDayOfWeek() - 1 %>"
