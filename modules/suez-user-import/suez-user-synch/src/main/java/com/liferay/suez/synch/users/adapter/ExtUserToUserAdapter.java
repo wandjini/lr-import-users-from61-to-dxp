@@ -104,8 +104,8 @@ public class ExtUserToUserAdapter {
 		user.setContactId(CounterLocalServiceUtil.increment());
 		user.setPasswordReset(this.extUser.getPasswordReset());
 		user.setDigest(this.extUser.getDigest());
-		user.setScreenName(this.extUser.getScreenName()+"#"+destinationGroupId);
-		user.setEmailAddress(destinationGroupId+"#"+this.extUser.getEmailAddress());
+		user.setScreenName(this.extUser.getScreenName()+ StringPool.UNDERLINE + destinationGroupId + StringPool.UNDERLINE);
+		user.setEmailAddress(StringPool.UNDERLINE + destinationGroupId+ StringPool.UNDERLINE +this.extUser.getEmailAddress());
 		user.setFacebookId(this.extUser.getFacebookId());
 		user.setLdapServerId(-1);
 		user.setOpenId(this.extUser.getOpenId());

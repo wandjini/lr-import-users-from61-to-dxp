@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.suez.synch.users.adapter.ExtUserToUserAdapter;
 import com.liferay.suez.synch.users.configuration.SynchSuezUsersConfiguration;
 import com.liferay.suez.synch.users.util.SuezMigrationRequest;
@@ -149,8 +150,8 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
 		
 		for(ExtUser extUser : extUsers){
-			email2Check = destinationGroupId +"#"+extUser.getEmailAddress();
-			screenName2Check = extUser.getScreenName()+"#"+destinationGroupId;
+			email2Check = StringPool.UNDERLINE + destinationGroupId + StringPool.UNDERLINE + extUser.getEmailAddress();
+			screenName2Check =  extUser.getScreenName() + StringPool.UNDERLINE + destinationGroupId + StringPool.UNDERLINE;
 			
 			if(email2Check.length() > 75 || 
 					screenName2Check.length() > 75){
