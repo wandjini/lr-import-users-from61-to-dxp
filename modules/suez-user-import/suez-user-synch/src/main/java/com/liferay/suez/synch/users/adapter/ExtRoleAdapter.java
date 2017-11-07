@@ -113,18 +113,18 @@ public class ExtRoleAdapter {
 	
 	
 	@Reference
-	protected static CounterLocalService counterLocService;
+	protected  CounterLocalService counterLocService;
 	@Reference
-	protected static ResourceLocalService resourceLocService;
+	protected  ResourceLocalService resourceLocService;
 
 	@Reference
-	protected static RoleLocalService roleLocService;
+	protected  RoleLocalService roleLocService;
 	
 	@Reference
-	protected static ClassNameLocalService classNameLocService;
+	protected  ClassNameLocalService classNameLocService;
 	
 	@Reference
-	protected static UserLocalService userLocService;
+	protected  UserLocalService userLocService;
 	
 	protected void reindex(User user) throws SearchException {
 		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(

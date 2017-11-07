@@ -10,6 +10,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,11 +24,13 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.ContactLocalService;
 import com.liferay.portal.kernel.service.ContactLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourceLocalService;
-import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -81,7 +84,7 @@ public class ExtUserToUserAdapter {
 		long companyId = serviceContext.getCompanyId();
 		long creatorUserId = serviceContext.getUserId();
 		String destinationGroupId = !ArrayUtil.isEmpty(groupIds) ? String.valueOf(groupIds[0]) : StringPool.BLANK;
-		User user = userLocService.createUser(counterLoService.increment());
+		User user = UserLocalServiceUtil.createUser(CounterLocalServiceUtil.increment());
 		user.setAgreedToTermsOfUse(this.extUser.getAgreedToTermsOfUse());
 		user.setPasswordEncrypted(this.extUser.getPasswordEncrypted());
 		user.setPassword(this.extUser.getPassword());
@@ -94,11 +97,11 @@ public class ExtUserToUserAdapter {
 		user.setLastLoginIP(this.extUser.getLastLoginIP());
 		user.setLastFailedLoginDate(this.extUser.getLastFailedLoginDate());
 		
-		Company company = companyLocService.fetchCompany(companyId);
+		Company company = CompanyLocalServiceUtil.fetchCompany(companyId);
 		// PLACEHOLDER 01
-		User defltUser = userLocService.getDefaultUser(companyId);
+		User defltUser = UserLocalServiceUtil.getDefaultUser(companyId);
 		user.setDefaultUser(this.extUser.getDefaultUser() );
-		user.setContactId(counterLoService.increment());
+		user.setContactId(CounterLocalServiceUtil.increment());
 		user.setPasswordReset(this.extUser.getPasswordReset());
 		user.setDigest(this.extUser.getDigest());
 		user.setScreenName(this.extUser.getScreenName()+"#"+destinationGroupId);
@@ -114,7 +117,7 @@ public class ExtUserToUserAdapter {
 		user.setLastName(this.extUser.getLastName());
 		user.setJobTitle(this.extUser.getJobTitle());
 		user.setStatus(this.extUser.getStatus());
-		user = userLocService.updateUser(user);
+		user = UserLocalServiceUtil.updateUser(user);
 		// Contact
 		String creatorUserName = StringPool.BLANK;
 		if (creatorUserId <= 0) {
@@ -140,10 +143,10 @@ public class ExtUserToUserAdapter {
 		contact.setLastName(this.extUser.getLastName());
 		contact.setBirthday(DateUtil.parseDate("ddMMyyyy", "0101970", serviceContext.getLocale()));
 		contact.setJobTitle(this.extUser.getJobTitle());
-		contactLocService.updateContact(contact);
+		ContactLocalServiceUtil.updateContact(contact);
 		// Group
 
-		groupLocService.addGroup(
+		GroupLocalServiceUtil.addGroup(
 			user.getUserId(), GroupConstants.DEFAULT_PARENT_GROUP_ID,
 			User.class.getName(), user.getUserId(),
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, (Map<Locale, String>)null,
@@ -156,17 +159,17 @@ public class ExtUserToUserAdapter {
 			List<Group> groups = new ArrayList<>();
 
 			for (long groupId : groupIds) {
-				Group group = groupLocService.fetchGroup(groupId);
+				Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 				if (group != null) {
 					groups.add(group);
 				}
 				
 			}
-			groupLocService.addUserGroups(user.getUserId(), groups);
+			GroupLocalServiceUtil.addUserGroups(user.getUserId(), groups);
 		}
 
-		userLocService.addDefaultGroups(user.getUserId());
+		UserLocalServiceUtil.addDefaultGroups(user.getUserId());
 		// Roles
 		
 		if (roleIds != null) {
@@ -175,34 +178,34 @@ public class ExtUserToUserAdapter {
 			
 		}
 		
-		userLocService.addDefaultRoles(user.getUserId());
+		UserLocalServiceUtil.addDefaultRoles(user.getUserId());
 		// Resources
 
-		resourceLocService.addResources(
+		ResourceLocalServiceUtil.addResources(
 			companyId, 0, creatorUserId, User.class.getName(), user.getUserId(),
 			false, false, false);
 		
 		// Indexer
 
 		reindex(user);
-
+		
 		// Workflow
 
 		long workflowUserId = creatorUserId;
 
-			if (workflowUserId == user.getUserId()) {
-				workflowUserId = defltUser.getUserId();
-			}
-	
-			ServiceContext	workflowServiceContext = new ServiceContext();
-	
-			workflowServiceContext.setAttribute("autoPassword", false);
-			workflowServiceContext.setAttribute("sendEmail", null);
-	
-			WorkflowHandlerRegistryUtil.startWorkflowInstance(
-				companyId, workflowUserId, User.class.getName(), user.getUserId(), user,
-				workflowServiceContext);
-		 
+		if (workflowUserId == user.getUserId()) {
+			workflowUserId = defltUser.getUserId();
+		}
+
+		ServiceContext	workflowServiceContext = new ServiceContext();
+
+		workflowServiceContext.setAttribute("autoPassword", false);
+		workflowServiceContext.setAttribute("sendEmail", null);
+
+		WorkflowHandlerRegistryUtil.startWorkflowInstance(
+			companyId, workflowUserId, User.class.getName(), user.getUserId(), user,
+			workflowServiceContext);
+	 
 		return user;
 	}
 
@@ -221,25 +224,47 @@ public class ExtUserToUserAdapter {
 	public void setExtUser(final ExtUser externalUser) {
 		this.extUser = externalUser;
 	}
+	/* 
+	@Reference(unbind = "-")
+	public void setUserLocalService( UserLocalService userLocalService){
+		userLocService = userLocalService;
+	}
+	protected   UserLocalService userLocService;
+	
+	@Reference(unbind = "-")
+	public void setCounterLocalService( CounterLocalService counterLocalService){
+		counterLoService = counterLocalService;
+	}
+	protected   CounterLocalService counterLoService;
+	
+	@Reference(unbind = "-")
+	public void setCompanyLocalService( CompanyLocalService companyLocalService){
+		companyLocService = companyLocalService;
+	}
+	protected  CompanyLocalService companyLocService;
+	
+	@Reference(unbind = "-")
+	public void setContactLocalService( ContactLocalService contactLocalService){
+		contactLocService = contactLocalService;
+	}
 
-	@Reference(unbind = "-")
-	protected static UserLocalService userLocService;
+	protected ContactLocalService contactLocService;
 	
 	@Reference(unbind = "-")
-	protected static CounterLocalService counterLoService;
-	
-	@Reference(unbind = "-")
-	protected static CompanyLocalService companyLocService;
-	
-	@Reference(unbind = "-")
-	protected static ContactLocalService contactLocService;
-	
-	@Reference(unbind = "-")
-	protected static GroupLocalService groupLocService;
-	
-	@Reference(unbind = "-")
-	protected static ResourceLocalService resourceLocService;
+	public void setGroupLocalService( GroupLocalService groupLocalService){
+		groupLocService = groupLocalService;
+	}
 
+	protected   GroupLocalService groupLocService;
+	
+	@Reference(unbind = "-")
+	public void setResourceLocalService( ResourceLocalService resourceLocalService){
+		resourceLocService = resourceLocalService;
+	}
+
+	protected   ResourceLocalService resourceLocService;
+	*/
+	
 	public void reindex(User user) throws SearchException {
 		Indexer<User> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 			User.class);
