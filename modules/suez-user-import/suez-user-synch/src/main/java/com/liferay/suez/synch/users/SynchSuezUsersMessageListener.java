@@ -147,11 +147,11 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		String email2Check = "";
 		String screenName2Check = "";
 		ServiceContext serviceContext = suezMigrationRequest.getServiceContext() ;
-		ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
+		//ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
 		
 		for(ExtUser extUser : extUsers){
-			email2Check = StringPool.UNDERLINE + destinationGroupId + StringPool.UNDERLINE + extUser.getEmailAddress();
-			screenName2Check =  extUser.getScreenName() + StringPool.UNDERLINE + destinationGroupId + StringPool.UNDERLINE;
+			email2Check = destinationGroupId + StringPool.UNDERLINE + extUser.getEmailAddress();
+			screenName2Check =  extUser.getScreenName() + StringPool.UNDERLINE + destinationGroupId;
 			
 			if(email2Check.length() > 75 || 
 					screenName2Check.length() > 75){
@@ -276,6 +276,13 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		userGroupRoleLocService = userGroupRoleLocalService;
 	}
 	protected UserGroupRoleLocalService userGroupRoleLocService;
+	
+	@Reference(unbind = "-")
+	protected void setExtUserToUserAdapter(
+			ExtUserToUserAdapter extUserToUserAdapter) {
+		userAdapter = extUserToUserAdapter;
+	}
+	protected ExtUserToUserAdapter userAdapter;
 	
 	private volatile SynchSuezUsersConfiguration confguration;
 	
