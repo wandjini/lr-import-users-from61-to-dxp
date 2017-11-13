@@ -38,6 +38,7 @@
 	long destRoleId3 = ParamUtil.getLong(renderRequest, "destRoleId3");
 	long destRoleId4 = ParamUtil.getLong(renderRequest, "destRoleId4");
 	
+	Integer totalUsersToProccess = (Integer)renderRequest.getAttribute("totalUsersToProcess");
 %>
 <portlet:renderURL var="importPortletUrl">
 	<portlet:param name="jspPath" value="/view.jsp"/>
@@ -49,6 +50,13 @@
 	<liferay-ui:error key="invalid-end-date"      message="invalid-end-date"/>
 	<liferay-ui:error key="invalid-roles-mapping" message="invalid-roles-mapping" />
 
+</aui:row>
+<aui:row>
+	<c:if test="<%=totalUsersToProccess != null &&  totalUsersToProccess > 0 %>">
+		<span class="success">
+		  <liferay-ui:message key="users-will-be-processed" arguments="<%=new int[]{totalUsersToProccess} %>"></liferay-ui:message>
+		</span>
+	</c:if>
 </aui:row>
 <portlet:actionURL name="importUsers" var="importUsersURL" />
 <aui:form method="post" name="fm" action="<%=importUsersURL.toString() %>">

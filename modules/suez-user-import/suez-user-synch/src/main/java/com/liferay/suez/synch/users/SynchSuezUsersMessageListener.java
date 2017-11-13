@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -78,6 +79,7 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 			long extCompanyId = suezMigrationRequest.getExtCompanyId();
 			long extRoleId = 0;
 			long newRoleId = 0;
+			int totalXRole = 0;
 			List<ExtUser> extUsers = null;
 			
 			_log.debug("Migration request");
@@ -85,6 +87,11 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 			_log.debug("Destination site Id: "+suezMigrationRequest.getDestinationGroupId());
 			_log.debug("Start Date: "+suezMigrationRequest.getStartDate());
 			_log.debug("End Date: "+suezMigrationRequest.getEndDate());
+			
+			Long[] roleIds = getLongArray(suezMigrationRequest.getExtRoleNewRoleMap().keySet());
+			
+			_log.debug("Total expected users to migrate: "+extUserLocService.countExtUsersByCompanyAndRoleIds(suezMigrationRequest.getExtCompanyId(), 
+					roleIds, suezMigrationRequest.getStartDate(), suezMigrationRequest.getEndDate()));
 			
 			//Just to import at most take users
 			//final version will provide a cycle to get all users
@@ -98,6 +105,7 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 				count = extUserLocService.countExtUsersByCompanyAndRole(extCompanyId, extRoleId, 
 							suezMigrationRequest.getStartDate(),
 							suezMigrationRequest.getEndDate());
+				_log.debug("Total users Found with role "+extRoleId +": [" +count+"]");
 				
 				extUsers = extUserLocService.findExtUsersByCompanyAndRole(extCompanyId, extRoleId, 
 						suezMigrationRequest.getStartDate(),
@@ -105,7 +113,7 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 				while(extUsers != null && !extUsers.isEmpty() )
 				{
 					
-					total += importUsers(newRoleId, extUsers, suezMigrationRequest);
+					totalXRole += importUsers(newRoleId, extUsers, suezMigrationRequest);
 				
 					start = end;
 					end+=take;
@@ -114,6 +122,11 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 							suezMigrationRequest.getEndDate(), start, count < end ? count:end);
 						
 				}
+				total += totalXRole;
+				
+				_log.debug("Total new users imported for Role "+extRoleId+": ["+totalXRole+"]");
+				
+				totalXRole = 0;
 				start = 0;
 				end = take;
 			}
@@ -147,7 +160,6 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		String email2Check = "";
 		String screenName2Check = "";
 		ServiceContext serviceContext = suezMigrationRequest.getServiceContext() ;
-		//ExtUserToUserAdapter userAdapter = new ExtUserToUserAdapter();
 		
 		for(ExtUser extUser : extUsers){
 			email2Check = destinationGroupId + StringPool.UNDERLINE + extUser.getEmailAddress();
@@ -203,7 +215,15 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		return total;
 	}
 	
-	
+	/**
+	 * Util method to get external roleids as array
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	protected Long [] getLongArray(Set<Long> ids) {
+		  return  ids.toArray(new Long[0]);  
+	}	
 	
 	@Reference(unbind = "-")
 	protected void setSchedulerEngineHelper(

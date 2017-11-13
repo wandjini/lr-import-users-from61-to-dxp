@@ -142,16 +142,33 @@ public class ExtUserLocalServiceWrapper implements ExtUserLocalService,
 		return _extUserLocalService.updateExtUser(extUser);
 	}
 
+	/**
+	* This method return the total number of external users
+	*/
 	@Override
 	public int countExtUsers() {
 		return _extUserLocalService.countExtUsers();
 	}
 
+	/**
+	* This method returns the number of external users filtered by company and role
+	*/
 	@Override
 	public int countExtUsersByCompanyAndRole(long companyId, long roleId,
 		java.util.Date startDate, java.util.Date endDate) {
 		return _extUserLocalService.countExtUsersByCompanyAndRole(companyId,
 			roleId, startDate, endDate);
+	}
+
+	/**
+	* This method returns the number of external users filtered by company and list of roles
+	*/
+	@Override
+	public int countExtUsersByCompanyAndRoleIds(long companyId,
+		java.lang.Long[] roleIds, java.util.Date startDate,
+		java.util.Date endDate) {
+		return _extUserLocalService.countExtUsersByCompanyAndRoleIds(companyId,
+			roleIds, startDate, endDate);
 	}
 
 	/**
@@ -227,12 +244,20 @@ public class ExtUserLocalServiceWrapper implements ExtUserLocalService,
 			orderByComparator);
 	}
 
+	/**
+	* <p> This method return users</p>
+	*
+	* @return -> List of external users
+	*/
 	@Override
 	public java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsers(
 		int start, int end) {
 		return _extUserLocalService.findExtUsers(start, end);
 	}
 
+	/**
+	* This method returns the list of external users filtered by company and role
+	*/
 	@Override
 	public java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsersByCompanyAndRole(
 		long companyId, long roleId, java.util.Date startDate,

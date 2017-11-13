@@ -26,4 +26,17 @@
 			WHERE u.companyid = ?		
 		]]>
 	</sql>
+	<sql id="com.liferay.suez.user.synch.service.persistence.ExtUserFinder.countUsersByCompanyAndRoleIds">
+		<![CDATA[
+			SELECT count(*)
+			FROM (user_ u 
+					INNER JOIN 
+					UserGroupRole ugr ON ( ugr.userid = u.userid
+						  				AND ugr.roleid in [$ROLE_IDS$] 
+						  		
+						  		   	   )
+				)
+			WHERE u.companyid = ?	
+		]]>
+	</sql>
 </custom-sql>

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -42,6 +44,7 @@ import com.liferay.suez.user.synch.model.ExtCompany;
 import com.liferay.suez.user.synch.model.ExtRole;
 import com.liferay.suez.user.synch.service.ExtCompanyLocalService;
 import com.liferay.suez.user.synch.service.ExtRoleLocalService;
+import com.liferay.suez.user.synch.service.ExtUserLocalService;
 
 @Component(
 	immediate = true,
@@ -106,17 +109,30 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 		super.doView(renderRequest, renderResponse);
 	}
 
+	/**
+	 * <p>This method trigger import process </p>
+	 * 
+	 * @param actionRequest
+	 * @param actionResponse
+	 * @throws PortalException
+	 */
 	public void importUsers(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException{
 		
 		
 		SuezMigrationRequest suezMigrationRequest = new SuezMigrationRequest();
 		setMigrationRequest(actionRequest, suezMigrationRequest);
 		int extRolesSize  = ParamUtil.getInteger(actionRequest, "extRolesSize");
+		Long[] externalRoleIds = null;
 		List<String> errors = new ArrayList<>();
 		if(SuezMigrationsRequestValidator.isSuezMigrationRequestValid(suezMigrationRequest, extRolesSize, errors)){
 			Message message = new Message();
 			message.setPayload(suezMigrationRequest);
 			MessageBusUtil.sendMessage(SynchSuezUsersKeys.DESTINATION_NAME, message);
+			externalRoleIds = getLongArray(suezMigrationRequest.getExtRoleNewRoleMap().keySet());
+			int totalUsersToProcess = extUserLocService.countExtUsersByCompanyAndRoleIds(suezMigrationRequest.getExtCompanyId(), 
+					externalRoleIds, suezMigrationRequest.getStartDate(),
+					suezMigrationRequest.getEndDate());
+			//actionRequest.setAttribute("totalUsersToProcess", totalUsersToProcess);
 		}
 		else{
 			if(!errors.isEmpty()){
@@ -127,10 +143,20 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 			}
 		}
 		Map <String,String[] > parameters = actionRequest.getParameterMap();
+		
 		actionResponse.setRenderParameters(parameters);
 		actionResponse.setRenderParameter("jspPath", "/view.jsp");
+		
 	}
 	
+	/**
+	 * 
+	 * <p>This method checks the migration request data </p>
+	 * 
+	 * @param actionRequest
+	 * @param suezMigrationRequest
+	 * @throws PortalException
+	 */
 	private void setMigrationRequest(ActionRequest actionRequest, 
 			SuezMigrationRequest  suezMigrationRequest) throws PortalException{
 		
@@ -179,6 +205,16 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 		
 	}
 	
+	/**
+	 * Util method to get external roleids as array
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	protected Long [] getLongArray(Set<Long> ids) {
+		  return  ids.toArray(new Long[0]);  
+	}
+	
 	@Reference
 	public void setGroupLocalService(GroupLocalService groupLocalService){
 		groupLocService = groupLocalService;
@@ -206,6 +242,14 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 	}
 	
 	protected ExtRoleLocalService extRoleLocService;
+	
+	@Reference(unbind = "-")
+	protected void setUserLocalService(
+			ExtUserLocalService extUserLocalService) {
+		extUserLocService = extUserLocalService;
+	}
+	
+	protected ExtUserLocalService extUserLocService;
 	
 	private static Log log = LogFactoryUtil.getLog(SuezUsersImportPortlet.class);
 	private static final String DESTINATION_GROUP_ID = "destinationGroupId";

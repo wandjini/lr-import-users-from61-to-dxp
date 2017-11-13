@@ -139,10 +139,22 @@ public interface ExtUserLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public ExtUser updateExtUser(ExtUser extUser);
 
+	/**
+	* This method return the total number of external users
+	*/
 	public int countExtUsers();
 
+	/**
+	* This method returns the number of external users filtered by company and role
+	*/
 	public int countExtUsersByCompanyAndRole(long companyId, long roleId,
 		Date startDate, Date endDate);
+
+	/**
+	* This method returns the number of external users filtered by company and list of roles
+	*/
+	public int countExtUsersByCompanyAndRoleIds(long companyId,
+		java.lang.Long[] roleIds, Date startDate, Date endDate);
 
 	/**
 	* Returns the number of ext users.
@@ -198,8 +210,16 @@ public interface ExtUserLocalService extends BaseLocalService,
 	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end, OrderByComparator<T> orderByComparator);
 
+	/**
+	* <p> This method return users</p>
+	*
+	* @return -> List of external users
+	*/
 	public List<ExtUser> findExtUsers(int start, int end);
 
+	/**
+	* This method returns the list of external users filtered by company and role
+	*/
 	public List<ExtUser> findExtUsersByCompanyAndRole(long companyId,
 		long roleId, Date startDate, Date endDate, int start, int end);
 

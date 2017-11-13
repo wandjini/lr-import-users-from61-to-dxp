@@ -28,4 +28,8 @@ public interface ExtUserFinder {
 
 	public int countUsersByCompanyAndRole(long companyId, long roleId,
 		java.util.Date startDate, java.util.Date endDate);
+
+	public int countUsersByCompanyAndRoleIds(long companyId,
+		java.lang.Long[] roleIds, java.util.Date startDate,
+		java.util.Date endDate);
 }

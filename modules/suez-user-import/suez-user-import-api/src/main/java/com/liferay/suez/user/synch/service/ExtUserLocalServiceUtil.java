@@ -141,15 +141,32 @@ public class ExtUserLocalServiceUtil {
 		return getService().updateExtUser(extUser);
 	}
 
+	/**
+	* This method return the total number of external users
+	*/
 	public static int countExtUsers() {
 		return getService().countExtUsers();
 	}
 
+	/**
+	* This method returns the number of external users filtered by company and role
+	*/
 	public static int countExtUsersByCompanyAndRole(long companyId,
 		long roleId, java.util.Date startDate, java.util.Date endDate) {
 		return getService()
 				   .countExtUsersByCompanyAndRole(companyId, roleId, startDate,
 			endDate);
+	}
+
+	/**
+	* This method returns the number of external users filtered by company and list of roles
+	*/
+	public static int countExtUsersByCompanyAndRoleIds(long companyId,
+		java.lang.Long[] roleIds, java.util.Date startDate,
+		java.util.Date endDate) {
+		return getService()
+				   .countExtUsersByCompanyAndRoleIds(companyId, roleIds,
+			startDate, endDate);
 	}
 
 	/**
@@ -220,11 +237,19 @@ public class ExtUserLocalServiceUtil {
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
 
+	/**
+	* <p> This method return users</p>
+	*
+	* @return -> List of external users
+	*/
 	public static java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsers(
 		int start, int end) {
 		return getService().findExtUsers(start, end);
 	}
 
+	/**
+	* This method returns the list of external users filtered by company and role
+	*/
 	public static java.util.List<com.liferay.suez.user.synch.model.ExtUser> findExtUsersByCompanyAndRole(
 		long companyId, long roleId, java.util.Date startDate,
 		java.util.Date endDate, int start, int end) {

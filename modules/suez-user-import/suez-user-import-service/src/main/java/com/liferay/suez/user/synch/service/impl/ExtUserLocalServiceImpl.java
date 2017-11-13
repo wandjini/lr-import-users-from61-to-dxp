@@ -44,25 +44,54 @@ public class ExtUserLocalServiceImpl extends ExtUserLocalServiceBaseImpl {
 	 * Never reference this class directly. Always use {@link com.liferay.suez.user.synch.service.ExtUserLocalServiceUtil} to access the ext user local service.
 	 */
 
+	/**
+	 * <p> This method return users</p>
+	 * 
+	 * @return -> List of external users  
+	 */
 	public List<ExtUser> findExtUsers(int start, int end){
 		
 		return extUserPersistence.findAll(start, end);
 	}
 	
+	/**
+	 * This method return the total number of external users
+	 */
 	public int countExtUsers(){
 		
 		return extUserPersistence.countAll();
 	}
 	
+	/**
+	 * This method returns the list of external users filtered by company and role
+	 * 
+	 * 
+	 */
 	public List<ExtUser> findExtUsersByCompanyAndRole(long companyId, long roleId, 
 			Date startDate, Date endDate, int start, int end){
 		
 		return extUserFinder.findUsersByCompanyAndRole(companyId, roleId, startDate, endDate, start, end);
 	}
 	
+	/**
+	 * This method returns the number of external users filtered by company and role
+	 * 
+	 * 
+	 */
 	public int countExtUsersByCompanyAndRole(long companyId, long roleId, 
 			Date startDate, Date endDate){
 		
 		return extUserFinder.countUsersByCompanyAndRole(companyId, roleId, startDate, endDate);
+	}
+	
+	/**
+	 * This method returns the number of external users filtered by company and list of roles
+	 * 
+	 * 
+	 */
+	public int countExtUsersByCompanyAndRoleIds(long companyId, Long[] roleIds, 
+			Date startDate, Date endDate){
+		
+		return extUserFinder.countUsersByCompanyAndRoleIds(companyId, roleIds, startDate, endDate);
 	}
 }
