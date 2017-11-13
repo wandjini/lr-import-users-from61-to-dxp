@@ -132,7 +132,8 @@ public class SuezUsersImportPortlet extends MVCPortlet {
 			int totalUsersToProcess = extUserLocService.countExtUsersByCompanyAndRoleIds(suezMigrationRequest.getExtCompanyId(), 
 					externalRoleIds, suezMigrationRequest.getStartDate(),
 					suezMigrationRequest.getEndDate());
-			//actionRequest.setAttribute("totalUsersToProcess", totalUsersToProcess);
+			SessionMessages.add(actionRequest, "users-will-be-processed");
+			actionRequest.getPortletSession().setAttribute("totalUsersToProcess", Integer.toString(totalUsersToProcess));
 		}
 		else{
 			if(!errors.isEmpty()){

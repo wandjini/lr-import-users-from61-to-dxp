@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.StringUtil"%>
+<%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
 <%@ include file="init.jsp" %>
 <%
@@ -38,8 +40,11 @@
 	long destRoleId3 = ParamUtil.getLong(renderRequest, "destRoleId3");
 	long destRoleId4 = ParamUtil.getLong(renderRequest, "destRoleId4");
 	
-	Integer totalUsersToProccess = (Integer)renderRequest.getAttribute("totalUsersToProcess");
+	String totalUsersToProccess = (String)renderRequest.getPortletSession().getAttribute("totalUsersToProcess");
+	renderRequest.getPortletSession().setAttribute("totalUsersToProcess", null);
+	String placeHolderMsg = LanguageUtil.format(request, "users-will-be-processed", new String[]{totalUsersToProccess != null ? totalUsersToProccess : "0"});
 %>
+
 <portlet:renderURL var="importPortletUrl">
 	<portlet:param name="jspPath" value="/view.jsp"/>
 </portlet:renderURL>
@@ -52,11 +57,12 @@
 
 </aui:row>
 <aui:row>
-	<c:if test="<%=totalUsersToProccess != null &&  totalUsersToProccess > 0 %>">
-		<span class="success">
-		  <liferay-ui:message key="users-will-be-processed" arguments="<%=new int[]{totalUsersToProccess} %>"></liferay-ui:message>
-		</span>
-	</c:if>
+ <c:if test="<%=totalUsersToProccess!= null %>">
+	 
+	 <p class="alert alert-success">
+	  	<c:out value="<%=placeHolderMsg %>"/>
+	 </p>
+ </c:if>
 </aui:row>
 <portlet:actionURL name="importUsers" var="importUsersURL" />
 <aui:form method="post" name="fm" action="<%=importUsersURL.toString() %>">
