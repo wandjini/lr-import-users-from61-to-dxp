@@ -41,7 +41,7 @@
 	long destRoleId4 = ParamUtil.getLong(renderRequest, "destRoleId4");
 	
 	String totalUsersToProccess = (String)renderRequest.getPortletSession().getAttribute("totalUsersToProcess");
-	renderRequest.getPortletSession().setAttribute("totalUsersToProcess", null);
+	renderRequest.getPortletSession().removeAttribute("totalUsersToProcess");
 	String placeHolderMsg = LanguageUtil.format(request, "users-will-be-processed", new String[]{totalUsersToProccess != null ? totalUsersToProccess : "0"});
 %>
 
