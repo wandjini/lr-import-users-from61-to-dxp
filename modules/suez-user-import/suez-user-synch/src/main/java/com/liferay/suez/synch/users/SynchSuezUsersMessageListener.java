@@ -138,7 +138,8 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 		}
 		
 	}
-
+	
+	
 	/**
 	 * Business method to import user and group/role association
 	 * 
@@ -209,6 +210,9 @@ public class SynchSuezUsersMessageListener extends BaseMessageListener {
 					userAdapter.reindex(user);
 					_log.debug("Associated existing user: "+user.getEmailAddress()+" to roleId "+newRoleId);
 				}
+				
+				_log.debug("External user: "+user.getEmailAddress()+" skipped because it already exists");
+				
 			}
 			
 		}
